@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "438728560771",
+    "project_id": "matowork-e9674",
+    "storage_bucket": "matowork-e9674.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438728560771:android:40abb10c50063f5b020bb6",
+        "android_client_info": {
+          "package_name": "com.matowork.scriptdocx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438728560771-hvnlaru0k10mda3ldrfoko3ana186rk4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.matowork.scriptdocx",
+            "certificate_hash": "5a49535b6999220b5766bd78375c3db2c35cb9c9"
+          }
+        },
+        {
+          "client_id": "438728560771-e1s9209cgj7fo8kge7qrc03m4l1a3vk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdrw4euh1lkSf1Jty-T_Ju4kgv2t_xQW8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438728560771-e1s9209cgj7fo8kge7qrc03m4l1a3vk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
