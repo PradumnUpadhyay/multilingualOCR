@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:matowork/components/db.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
-import 'package:hive/hive.dart';
 
 import 'dart:io';
 
@@ -11,6 +13,7 @@ class ListFiles extends StatefulWidget {
 }
 
 class _ListFilesState extends State<ListFiles> {
+
   String dir;
   List file = new List();
 
@@ -118,12 +121,11 @@ class _ListFilesState extends State<ListFiles> {
                                 .replaceAll("'", ""));
                             File temp = File(path);
                             await temp.delete();
-                            var box = await Hive.openLazyBox('user');
-                            //box.put('data', [name]);
-                            List tem1 = await box.get('document');
-                            tem1.remove(
-                                item.split('/')[pos].replaceAll("'", ""));
-                            await box.put('document', tem1);
+
+                            await Db.client.post(Uri.parse("https://matowork.com/user/delete"),
+                                body: json.encode({"filename":Db.filename, "username": Db.username}),
+                                headers: {"Content-Type": "application/json"});
+
                             setState(() {
                               file = Directory(dir).listSync();
                             });

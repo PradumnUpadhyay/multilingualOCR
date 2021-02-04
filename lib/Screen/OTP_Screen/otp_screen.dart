@@ -8,6 +8,7 @@ import 'package:matowork/Screen/OTP_Screen/otp_timer.dart';
 import 'package:matowork/Screen/SignUp/signup.dart';
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/db.dart';
+import 'package:hive/hive.dart';
 
 class OtpView extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
   // Constants
   final int time = 75;
   AnimationController _controller;
+
 
   // Variables
   Size _screenSize;
@@ -32,10 +34,6 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
   Timer timer;
   int totalTimeInSeconds;
   bool _hideResendButton;
-
-  String userName = "";
-  bool didReadNotifications = false;
-  int unReadNotificationsCount = 0;
 
   // Returns "Appbar"
   get _getAppbar {
@@ -141,8 +139,10 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
           ),
           color: Colors.blueAccent,
           onPressed: () async {
-            http.Response _ = await http
-                .post("matowork.com/user/otp", body: {"email": Db.email});
+            print("Username: "+Db.email+Db.password);
+            http.Response _ = await Db.client
+                .post("matowork.com/user/opt", body: json.encode({"email": Db.email}),
+                headers: {'Content-Type': "application/json"});
             clearOtp();
             _startCountdown();
           },
@@ -240,15 +240,22 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
                           color: Colors.black,
                         ),
                         onPressed: () async {
-                          http.Response response = await http
-                              .post("matowork.com/user/registry", body: {
+                          print("OTP screen");
+                          print(Db.email+Db.password);
+                          http.Response response = await Db.client
+                              .post("https://matowork.com/user/registration", body: json.encode({
                             "email": Db.email,
                             "otp": Db.otp,
-                            "username": Db.email + Db.password
-                          });
-                          var res = jsonDecode(response.body);
+                            "username": "${Db.email+Db.password}"
+                          }),
+                              headers: {'Content-Type': "application/json"});
 
+                          var res = json.decode(response.body);
+                            print(response.body);
                           if (res['registration'] == true) {
+                            var box=await Hive.openBox("uname");
+                            Db.username=Db.email+Db.password;
+                            box.put('username',Db.username);
                             Navigator.pushAndRemoveUntil(context,
                                 MaterialPageRoute(builder: (context) {
                               return WelcomeScreen();

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:matowork/Screen/Login/input_box.dart';
 import 'package:matowork/Screen/OTP_Screen/otp_screen.dart';
+import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/account_check.dart';
 import 'package:matowork/components/db.dart';
 import '../SignUp/signup.dart';
@@ -90,12 +94,29 @@ class _BodyState extends State<Body> {
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                 color: Color(0xFF6F35A5),
                 onPressed: () async {
-                  var _ = await http.post("https://matowork.com/user/otp",
-                      body: {"email": Db.email, "password": Db.password});
+                  var res = await Db.client.post("https://matowork.com/user/login",
+                      body: json.encode({"email": Db.email, "password": Db.password}),
+                      headers: {'Content-Type': "application/json"});
+                  Map body=json.decode(res.body);
+
+                  if(body["logged-in"]==true) {
+                    var box=await Hive.openBox('uname');
+                    Db.username=Db.email+Db.password;
+                    box.put("username",Db.username);
+                    print("Login");
+                    print(Db.username);
+                  Db.pageLeft=await Db.getPageLimit();
                   Navigator.pushAndRemoveUntil(context,
                       MaterialPageRoute(builder: (context) {
-                    return OtpView();
+                    return WelcomeScreen();
                   }), ModalRoute.withName(''));
+                 } else {
+                        Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) {
+                        return SignUp();
+                        }), ModalRoute.withName(''));
+                  }
+
                 },
                 child: Text("LOGIN", style: TextStyle(color: Colors.white)),
               ),

@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:matowork/Screen/Page1/page1.dart';
+import 'package:hive/hive.dart';
 import 'package:matowork/components/document_check.dart';
 import '../../components/db.dart';
 
-//Color(0xFFF1E6FF)
 class Body extends StatefulWidget {
   @override
   _BodyState createState() => _BodyState();
 }
 
 class _BodyState extends State<Body> {
+
   TextEditingController _textFieldController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+//
+//  void _getPages()  {
+//    Db.getPageLimit().then((val) {
+//      setState(() {
+//        Db.pageLeft=val;
+//      });
+//    });
+//  }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
@@ -24,6 +33,7 @@ class _BodyState extends State<Body> {
                 setState(() {
                   valueText = value;
                 });
+
               },
               controller: _textFieldController,
               decoration: InputDecoration(hintText: "Filename"),
@@ -34,26 +44,34 @@ class _BodyState extends State<Body> {
                 textColor: Colors.white,
                 child: Text('CANCEL'),
                 onPressed: () {
+                  _textFieldController.text="";
                   setState(() {
                     Navigator.pop(context);
                   });
                 },
               ),
-              FlatButton(
-                color: Colors.blue,
-                textColor: Colors.white,
-                child: Text('Create'),
-                onPressed: () {
-                  setState(() {
-                    Db.filename = valueText;
-                    print(codeDialog);
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Page1();
-                    }), ModalRoute.withName(''));
-                  });
-                },
-              ),
+
+             Builder(
+               builder: (context) => FlatButton(
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    child: Text('CREATE'),
+                      onPressed: () {
+
+                      setState(() {
+                      Db.filename = valueText;
+
+                      if(valueText != null && _textFieldController.text != "" && valueText != " ") {
+                        Db.convert=false;
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        Navigator.pushReplacementNamed(context,'/page1');
+                      } else {
+                        _scaffoldKey.currentState.showSnackBar(Db.snackBar);
+                      }
+                      });
+                    },
+                  ),
+             ),
             ],
           );
         });
@@ -61,18 +79,31 @@ class _BodyState extends State<Body> {
 
   String valueText;
   String codeDialog;
+
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     //Size size = MediaQuery.of(context).size;
 
+//    _getPages();
+
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple[100],
-        title: Center(
-            child: Text(
-          "Welcome Yagami!",
-          style: TextStyle(color: Colors.black87),
-        )),
+
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Pages Remaining: ${Db.pageLeft}",style: TextStyle(color: Colors.black87),),
+
+            Text(
+              "Welcome",
+              style: TextStyle(color: Colors.black87),
+            )
+          ],
+        ),
       ),
       backgroundColor: Colors.white,
       body: ListFiles(),
