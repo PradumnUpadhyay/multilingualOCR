@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:matowork/Screen/Login/login.dart';
 import 'package:matowork/components/document_check.dart';
 import '../../components/db.dart';
 
@@ -12,14 +13,6 @@ class _BodyState extends State<Body> {
 
   TextEditingController _textFieldController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-//
-//  void _getPages()  {
-//    Db.getPageLimit().then((val) {
-//      setState(() {
-//        Db.pageLeft=val;
-//      });
-//    });
-//  }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
@@ -91,16 +84,37 @@ class _BodyState extends State<Body> {
       key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple[100],
+        backgroundColor: Colors.deepPurple,
+//        Colors.deepPurple[100],
 
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Pages Remaining: ${Db.pageLeft}",style: TextStyle(color: Colors.black87),),
+            Row(
+              children: [
+                Icon(Icons.description, size: 30,),
+                SizedBox(width: 5,),
+                Text("${Db.pageLeft} Pages",style: TextStyle(color: Colors.white70, fontSize: 20, fontWeight: FontWeight.w400),),
+              ],
+            ),
 
-            Text(
-              "Welcome",
-              style: TextStyle(color: Colors.black87),
+
+            FlatButton(
+              child: Text("LogOut", style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w400
+              ),),
+
+              onPressed: () async {
+                var box=await Hive.openBox("uname");
+                box.deleteFromDisk();
+
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+                  return LoginScreen();
+                }), ModalRoute.withName(''));
+
+              },
             )
           ],
         ),

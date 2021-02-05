@@ -36,7 +36,6 @@ void main() async
 }
 
 class MyApp extends StatelessWidget {
-  List<File> file = new List<File>();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

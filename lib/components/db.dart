@@ -13,7 +13,7 @@ class Db {
     duration: Duration(seconds: 1),
   );
 
-  static List<String> selectedImage=new List<String>();
+  static List<bool> checker=new List<bool>();
   static bool convert=false;
   static var client = http.Client();
   static String filename;
@@ -73,7 +73,7 @@ class Db {
   }
 
   // Storing image files
-  static Future<int> ImageUpload() async {
+  static Future<void> ImageUpload() async {
     List<MultipartFile> fileList=new List<MultipartFile>();
     var request = http.MultipartRequest('POST', Uri.parse("https://matowork.com/user/upload"));
 
@@ -143,5 +143,32 @@ class Db {
 
   }
 
+ static void sexoo() {
+    for(int i=0;i<Db.checker.length;i++) {
+      if(Db.checker[i] == true) {
+        Db.imageList.remove(Db.displayImages[i]);
+        Db.displayImages.removeAt(i);
+        Db.checker.removeAt(i);
+        i=0;
+      }
+    }
+    for(int i=0;i<Db.checker.length;i++) {
+      if(Db.checker[i] == true) {
+        Db.checker[i]=false;
+        i=0;
+      }
+    }
+  }
+
+  static int counter() {
+    int c=0;
+    for(int i=0;i<Db.checker.length;i++) {
+      if(Db.checker[i] == true) {
+        c++;
+      }
+    }
+
+    return c;
+  }
   }
 

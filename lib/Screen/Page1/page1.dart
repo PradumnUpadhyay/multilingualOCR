@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matowork/Screen/Page1/camera_screeen.dart';
+import 'package:matowork/Screen/Page1/multi_select.dart';
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/repeat.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -89,6 +90,8 @@ class _Page1State extends State<Page1> {
         //decoration: BoxDecoration(border: Border(right: BorderSide(color: Colors.black,width: 2.0,style: BorderStyle.solid,))),
         child: GridView.count(
           crossAxisCount: 2,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
           padding: EdgeInsets.all(5.0),
           children:
            List.generate(Db.displayImages.length, (index)
@@ -96,22 +99,33 @@ class _Page1State extends State<Page1> {
           return Container(
               padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
               decoration: BoxDecoration(
-              border: Border.all(color: Colors.black,width: 1.0),
+              border: Border.all(color: Db.checker[index] ? Colors.blue[900].withOpacity(1) : Colors.black87,
+                  width: Db.checker[index] ? 2.0 : 0.25,
+                  ),
+                borderRadius: BorderRadius.circular(15)
               ),
               child: FlatButton(
               padding: EdgeInsets.all(1.0),
 
                 child: Image.file(File(Db.displayImages[index]), height: 300, width: 200),
                   onLongPress: () {
-                      _showSelectedOverlay(context, index);
+                      setState(() {
+                        Db.checker[index]=!Db.checker[index];
+                      });
                   },
                   onPressed: () async {
-                  File image;
-                  image=await cropImage(File(Db.displayImages[index]).path);
+                  if(!Db.checker.contains(true)) {
+                    File image;
+                    image=await cropImage(File(Db.displayImages[index]).path);
 
-                  setState(() {
-                  Db.displayImages[index]=image.path;
-                  });
+                    setState(() {
+                      Db.displayImages[index]=image.path;
+                    });
+                  } else {
+                    setState(() {
+                      Db.checker[index]=!Db.checker[index];
+                    });
+                  }
 
           })
           );
@@ -144,11 +158,15 @@ class _Page1State extends State<Page1> {
         images = result.paths.map((e) => File(e).path).toList();
         Db.imageList.addAll(images);
         Db.displayImages.addAll(images);
+        for(int i=0;i<Db.displayImages.length;i++) {
+          Db.checker.add(false);
+        }
       });
 
     print("Image list");
     print(Db.imageList.length);
     print(Db.displayImages.length);
+
       Db.languages.forEach((key, value) {
         if (value == true) {
           Db.languages[key] = false;
@@ -213,49 +231,6 @@ class _Page1State extends State<Page1> {
     print(Db.config);
   }
 
-  Future<void> _showSelectedOverlay(BuildContext context,int index) {
-    return showDialog(context: context,
-      builder: (context) {
-          return Scaffold(
-            body: InkWell(
-              onTap: () {
-                setState(() {
-                  isSelected=!isSelected;
-                  if(isSelected) {
-                    Db.selectedImage.add(Db.displayImages[index]);
-                  } else{
-                    Db.selectedImage.remove(Db.displayImages[index]);
-                  }
-                });
-
-                print("$index : ${Db.selectedImage[index]}");
-//              widget.isSelected(isSelected);
-              },
-
-              child: Stack(
-                children: <Widget>[
-                  Image.file(File(Db.displayImages[index]), color: Colors.black.withOpacity(isSelected ? 0.9: 0.0), colorBlendMode:  BlendMode.color,),
-
-                  isSelected ?
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.check_circle,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ) :
-                  Container()
-                ],
-              ),
-            ),
-          );
-      }
-    );
-  }
-
   @override
     Widget build(BuildContext context) {
 
@@ -283,32 +258,64 @@ class _Page1State extends State<Page1> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Pages Remaining: ${Db.pageLeft}",
-                  style: TextStyle(fontWeight: FontWeight.w400),
+                (Db.checker != null && Db.checker.contains(true)) ?
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.delete_forever), onPressed: () {
+
+                          setState(() {
+                            Db.sexoo();
+                          });
+
+                        },
+                        ),
+                        Text("${Db.counter()}", style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w300
+                        ),)
+                      ],
+                    )
+                    :
+                Row(
+                  children: [
+                    Icon(Icons.description, size: 30,),
+                    SizedBox(width: 5,),
+                    Text("${Db.pageLeft} Pages",style: TextStyle(color: Colors.white70, fontSize: 20, fontWeight: FontWeight.w400),),
+                  ],
                 ),
                 FlatButton(
                     onPressed: () {
 
-                      Navigator.pushAndRemoveUntil(context,
-                          MaterialPageRoute(builder: (context) {
-                            return WelcomeScreen();
-                          }), ModalRoute.withName(''));
+                      if(!Db.checker.contains(true)) {
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (context) {
+                              return WelcomeScreen();
+                            }), ModalRoute.withName(''));
 //                      setState(() {
-                        Db.imageList=[];
+                        Db.imageList = [];
                         Db.languages.forEach((key, value) {
                           if (value == true) {
                             Db.languages[key] = false;
                           }
 //                        });
-                      });
-
+                        });
+                      } else {
+                        for(int i=0;i<Db.checker.length;i++) {
+                          if(Db.checker[i] == true) {
+                            setState(() {
+                              Db.checker[i]=false;
+                            });
+                            i=0;
+                          }
+                        }
+                      }
                     },
                     child: Text(
                       "Cancel",
                       style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 20,
+                          fontWeight: FontWeight.w300,
+                          fontSize: 19,
                           color: Colors.white),
                     ))
               ],

@@ -50,6 +50,9 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
               onPressed: () {
                 Db.displayImages.addAll(files);
               Db.imageList.addAll(files);
+                for(int i=0;i<Db.displayImages.length;i++) {
+                  Db.checker.add(false);
+                }
             Navigator.pushAndRemoveUntil(context,
               MaterialPageRoute(builder: (context) {
                 return Page1();
