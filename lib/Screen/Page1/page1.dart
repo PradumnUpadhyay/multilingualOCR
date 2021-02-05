@@ -22,7 +22,6 @@ class _Page1State extends State<Page1> {
   String str = "";
   int c=0;
   bool isSelected=false;
-
 //  CameraController _controller;
   List<CameraDescription> _cameras;
   List<String> images=new List<String>();
@@ -104,9 +103,7 @@ class _Page1State extends State<Page1> {
 
                 child: Image.file(File(Db.displayImages[index]), height: 300, width: 200),
                   onLongPress: () {
-                    setState(() {
-                      isSelected=!isSelected;
-                    });
+                      _showSelectedOverlay(context, index);
                   },
                   onPressed: () async {
                   File image;
@@ -216,6 +213,48 @@ class _Page1State extends State<Page1> {
     print(Db.config);
   }
 
+  Future<void> _showSelectedOverlay(BuildContext context,int index) {
+    return showDialog(context: context,
+      builder: (context) {
+          return Scaffold(
+            body: InkWell(
+              onTap: () {
+                setState(() {
+                  isSelected=!isSelected;
+                  if(isSelected) {
+                    Db.selectedImage.add(Db.displayImages[index]);
+                  } else{
+                    Db.selectedImage.remove(Db.displayImages[index]);
+                  }
+                });
+
+                print("$index : ${Db.selectedImage[index]}");
+//              widget.isSelected(isSelected);
+              },
+
+              child: Stack(
+                children: <Widget>[
+                  Image.file(File(Db.displayImages[index]), color: Colors.black.withOpacity(isSelected ? 0.9: 0.0), colorBlendMode:  BlendMode.color,),
+
+                  isSelected ?
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ) :
+                  Container()
+                ],
+              ),
+            ),
+          );
+      }
+    );
+  }
 
   @override
     Widget build(BuildContext context) {

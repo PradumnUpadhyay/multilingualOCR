@@ -13,6 +13,7 @@ class Db {
     duration: Duration(seconds: 1),
   );
 
+  static List<String> selectedImage=new List<String>();
   static bool convert=false;
   static var client = http.Client();
   static String filename;
@@ -141,5 +142,6 @@ class Db {
       return Db.checkEmail();
 
   }
+
   }
 
