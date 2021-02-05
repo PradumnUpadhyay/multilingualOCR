@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:file_picker/file_picker.dart';
 
 class Db {
 
@@ -47,6 +47,20 @@ class Db {
   };
   static List<String> config = [];
 
+  static buildShowDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 5,
+            ),
+          );
+        }
+    );
+  }
+
   static Future<File> getFile(String filename) async {
     final dir = await getExternalStorageDirectory();
     return File("${dir.path}/$filename.docx");
@@ -76,7 +90,7 @@ class Db {
     var res=await request.send();
  print(res);
     List<int> bytes=[];
-    
+
     final file=await getFile(Db.filename);
     await file.writeAsBytes(bytes);
     res.stream.listen((List<int> newBytes) {

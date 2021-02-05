@@ -21,6 +21,7 @@ class _Page1State extends State<Page1> {
 
   String str = "";
   int c=0;
+  bool isSelected=false;
 
 //  CameraController _controller;
   List<CameraDescription> _cameras;
@@ -32,7 +33,7 @@ class _Page1State extends State<Page1> {
     getPages();
     super.initState();
     _initCamera();
-
+    _homePageRoute();
   }
 
   Future<void> _initCamera() async {
@@ -102,7 +103,11 @@ class _Page1State extends State<Page1> {
               padding: EdgeInsets.all(1.0),
 
                 child: Image.file(File(Db.displayImages[index]), height: 300, width: 200),
-                  onLongPress: () {},
+                  onLongPress: () {
+                    setState(() {
+                      isSelected=!isSelected;
+                    });
+                  },
                   onPressed: () async {
                   File image;
                   image=await cropImage(File(Db.displayImages[index]).path);
@@ -115,31 +120,6 @@ class _Page1State extends State<Page1> {
           );
 
           })
-//              : Text("No Images Selected",style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.grey[600]),)
-//          : (Db.displayImages.length > 0 && c != 0) ?? List.generate(Db.displayImages.length, (index)
-//                  {
-//                return Container(
-//                      padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-//                      decoration: BoxDecoration(
-//                      border: Border.all(color: Colors.black,width: 1.0),
-//                      ),
-//                    child: FlatButton(
-//                    padding: EdgeInsets.all(1.0),
-//
-//                          child: Image.file(File(Db.displayImages[index]), height: 300, width: 200),
-//                          onLongPress: () {},
-//                          onPressed: () async {
-//                          File image;
-//                          image=await cropImage(File(Db.displayImages[index]).path);
-//
-//                          setState(() {
-//                            Db.displayImages[index]=image.path;
-//                          });
-//                        })
-//                      );
-//
-//                    }),
-
         ),
       );
     else
@@ -148,7 +128,7 @@ class _Page1State extends State<Page1> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            "No images Selected ${Db.displayImages.length}, ${Db.imageList.length}",
+            "No images Selected",
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17, color: Colors.grey[600]),
           ),
         ),
@@ -202,9 +182,7 @@ class _Page1State extends State<Page1> {
       });
     }
 
-    @override
-    Widget build(BuildContext context) {
-
+    void _homePageRoute() {
       Timer timer;
       timer = Timer.periodic(Duration(seconds: 10),
               (Timer _) async {
@@ -212,16 +190,53 @@ class _Page1State extends State<Page1> {
 //            print('periodic function');
             List filef = Directory(await Db.getDir()).listSync();
             if (filef.length > filei.length) {
-
-              Navigator.pushNamed(context,'/home');
+              timer.cancel();
+              Navigator.pushNamedAndRemoveUntil(context,'/home',ModalRoute.withName('/'));
               Db.languages.forEach((key, value) {
                 if (value == true) {
                   Db.languages[key] = false;
                 }
               });
-              timer.cancel();
+
             }
           });
+
+    }
+
+  Future<void> _convertButtonFunctionality() async {
+    setState(() {
+      Db.convert=true;
+    });
+    str = "";
+    checkBoxLanguages();
+    Db.config = Repeat.removeDublicate(Db.config);
+    Db.buildShowDialog(context);
+    await Db.ImageUpload();
+
+    print(Db.config);
+  }
+
+
+  @override
+    Widget build(BuildContext context) {
+
+//      Timer timer;
+//      timer = Timer.periodic(Duration(seconds: 10),
+//              (Timer _) async {
+//
+////            print('periodic function');
+//            List filef = Directory(await Db.getDir()).listSync();
+//            if (filef.length > filei.length) {
+//              timer.cancel();
+//              Navigator.pushNamedAndRemoveUntil(context,'/home',ModalRoute.withName('/'));
+//              Db.languages.forEach((key, value) {
+//                if (value == true) {
+//                  Db.languages[key] = false;
+//                }
+//              });
+//
+//            }
+//          });
 
       return Scaffold(
           appBar: AppBar(
@@ -297,16 +312,16 @@ class _Page1State extends State<Page1> {
 
                                 setState(() {
                                   checkBoxLanguages();
+                                  if(c!=0) {
+                                    print(c);
+                                    checkBoxLanguages();
+                                    Db.displayImages=[];
+                                  }
                                 });
                                 str = "";
                                 await loadAssets();
                                 print(c);
-                                if(c!=0) {
-                                  print(c);
-                                  checkBoxLanguages();
-                                  Db.displayImages=[];
 
-                                }
                                 c=0;
                                 print("Display images ${Db.displayImages.length}");
                                 print("Image list ${Db.imageList.length}");
@@ -380,17 +395,9 @@ class _Page1State extends State<Page1> {
                                 color: Colors.grey[700],
                                 fontWeight: FontWeight.w700,
                                 fontSize: 17)),
-                        onPressed: (Db.imageList.length != 0 || Db.displayImages.length != 0 || Db.convert == false) ? () {
-                          setState(() {
-                            Db.convert=true;
-                          });
-                          str = "";
-                          checkBoxLanguages();
-                          Db.config = Repeat.removeDublicate(Db.config);
-                          Db.ImageUpload();
-
-                          print(Db.config);
-                        } : null,
+                        onPressed: (Db.imageList.length != 0 && Db.displayImages.length != 0) ?
+                        _convertButtonFunctionality : Db.convert == true ?
+                        null : _convertButtonFunctionality,
                       ),
                     ),
                     body: Container(

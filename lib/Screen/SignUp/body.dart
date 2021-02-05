@@ -19,6 +19,7 @@ class _BodyState extends State<Body> {
   bool _match = true; bool email=false;
   bool gmail=false;
   String _confPass, _pass;
+  bool empty=false;
   bool checkEmail=false;
   void _toggle() {
     setState(() {
@@ -194,6 +195,12 @@ class _BodyState extends State<Body> {
                           email=true;
                         });
                       }
+
+                      if(Db.password == "" || Db.password == " ") {
+                        setState(() {
+                          empty=true;
+                        });
+                      }
                     },
                     child: Text(
                       "SIGN UP",
@@ -207,7 +214,7 @@ class _BodyState extends State<Body> {
                       "Passwords do not match",
                       style: TextStyle(color: Colors.red),
                     )
-                  : Text(""),
+                  : (empty == true) ? Text("Password cannot be empty", style: TextStyle(color: Colors.red, fontSize: 17)) : Text(""),
 
                 checkEmail == true ? Text("Email Already exists",style: TextStyle(color: Colors.red, fontSize: 17)): Text(""),
 

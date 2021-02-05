@@ -122,10 +122,12 @@ class _ListFilesState extends State<ListFiles> {
                             File temp = File(path);
                             await temp.delete();
 
-                            await Db.client.post(Uri.parse("https://matowork.com/user/delete"),
+                            var res=await Db.client.post(Uri.parse("https://matowork.com/user/delete"),
                                 body: json.encode({"filename":Db.filename, "username": Db.username}),
                                 headers: {"Content-Type": "application/json"});
 
+                            Map body=json.decode(res.body);
+                            print(body);
                             setState(() {
                               file = Directory(dir).listSync();
                             });
