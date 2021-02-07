@@ -43,7 +43,7 @@ class _ListFilesState extends State<ListFiles> {
       return Container(
         alignment: Alignment.center,
         child: Text(
-          'You haven\'t created any documents',
+          'You haven\'t created any document',
           style: TextStyle(fontSize: 20, color: Colors.black54),
         ),
       );

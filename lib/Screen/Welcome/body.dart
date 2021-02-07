@@ -57,8 +57,16 @@ class _BodyState extends State<Body> {
                   child: Text('CREATE'),
                   onPressed: () {
                     setState(() {
-                      Db.filename = valueText;
-
+                      Db.filename = valueText.trim();
+                      print(Db.filename);
+                      if (Db.filename.contains('_')) {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(
+                              "Filename cannot contain an underscore  ( _ ) "),
+                          duration: Duration(seconds: 3),
+                        ));
+                        return;
+                      }
                       if (valueText != null &&
                           _textFieldController.text != "" &&
                           valueText != " ") {

@@ -38,11 +38,15 @@ class _Page1State extends State<Page1> {
     firstCamera = _cameras.first;
     Db.pageLeft = await Db.getPageLimit();
     filei = Directory(await Db.getDir()).listSync();
+    int i = 0;
     while (true) {
-      if (filei.toString().contains("${Db.filename}.docx"))
-        Db.filename = Db.filename + '_1';
-      else
+      if (filei.toString().contains("${Db.filename}$i.docx")) {
+        //Db.filename = Db.filename + '$i';
+        i++;
+      } else {
+        Db.filename = Db.filename + '$i';
         break;
+      }
     }
   }
 
@@ -345,7 +349,7 @@ class _Page1State extends State<Page1> {
                                       checkBoxLanguages();
                                       if (c != 0) {
                                         print(c);
-                                        checkBoxLanguages();
+                                        //checkBoxLanguages();
                                         Db.displayImages = [];
                                       }
                                     });
@@ -362,10 +366,16 @@ class _Page1State extends State<Page1> {
                         IconButton(
                             color: Colors.blueAccent[400],
                             icon: Icon(Icons.add_a_photo),
-                            onPressed: (c > 0 || (Db.pageLeft > 0))
+                            onPressed: (Db.pageLeft > 0)
                                 ? () async {
                                     setState(() {
                                       checkBoxLanguages();
+
+                                      if (c != 0) {
+                                        //print("${}")
+                                        //checkBoxLanguages();
+                                        Db.displayImages = [];
+                                      }
                                     });
 //                                checkBoxLanguages();
                                     str = "";
@@ -375,13 +385,7 @@ class _Page1State extends State<Page1> {
                                             builder: (context) =>
                                                 TakePictureScreen(
                                                     camera: firstCamera)));
-                                    setState(() {
-                                      if (c != 0) {
-                                        Db.displayImages = [];
-                                        checkBoxLanguages();
-                                      }
-                                      c = 0;
-                                    });
+                                    c = 0;
                                   }
                                 : null)
                       ],
