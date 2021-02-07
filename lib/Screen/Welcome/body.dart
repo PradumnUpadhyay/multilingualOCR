@@ -10,12 +10,20 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
-
   TextEditingController _textFieldController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  _BodyState() {
+    Db.getPageLimit().then((value) {
+      setState(() {
+        Db.pageLeft = value;
+      });
+    });
+  }
+
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -24,9 +32,8 @@ class _BodyState extends State<Body> {
             content: TextField(
               onChanged: (value) {
                 setState(() {
-                  valueText = value;
+                  valueText = value.trim();
                 });
-
               },
               controller: _textFieldController,
               decoration: InputDecoration(hintText: "Filename"),
@@ -37,34 +44,35 @@ class _BodyState extends State<Body> {
                 textColor: Colors.white,
                 child: Text('CANCEL'),
                 onPressed: () {
-                  _textFieldController.text="";
+                  _textFieldController.text = "";
                   setState(() {
                     Navigator.pop(context);
                   });
                 },
               ),
-
-             Builder(
-               builder: (context) => FlatButton(
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    child: Text('CREATE'),
-                      onPressed: () {
-
-                      setState(() {
+              Builder(
+                builder: (context) => FlatButton(
+                  color: Colors.blue,
+                  textColor: Colors.white,
+                  child: Text('CREATE'),
+                  onPressed: () {
+                    setState(() {
                       Db.filename = valueText;
 
-                      if(valueText != null && _textFieldController.text != "" && valueText != " ") {
-                        Db.convert=false;
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.pushReplacementNamed(context,'/page1');
+                      if (valueText != null &&
+                          _textFieldController.text != "" &&
+                          valueText != " ") {
+                        Db.convert = false;
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
+                        Navigator.pushReplacementNamed(context, '/page1');
                       } else {
                         _scaffoldKey.currentState.showSnackBar(Db.snackBar);
                       }
-                      });
-                    },
-                  ),
-             ),
+                    });
+                  },
+                ),
+              ),
             ],
           );
         });
@@ -73,9 +81,8 @@ class _BodyState extends State<Body> {
   String valueText;
   String codeDialog;
 
-
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     //Size size = MediaQuery.of(context).size;
 
 //    _getPages();
@@ -92,28 +99,41 @@ class _BodyState extends State<Body> {
           children: [
             Row(
               children: [
-                Icon(Icons.description, size: 30,),
-                SizedBox(width: 5,),
-                Text("${Db.pageLeft} Pages",style: TextStyle(color: Colors.white70, fontSize: 20, fontWeight: FontWeight.w400),),
+                Icon(
+                  Icons.description,
+                  size: 30,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  "${Db.pageLeft} Pages",
+                  style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w400),
+                ),
               ],
             ),
-
-
             FlatButton(
-              child: Text("LogOut", style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w400
-              ),),
-
+              child: Text(
+                "LogOut",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400),
+              ),
               onPressed: () async {
-                var box=await Hive.openBox("uname");
+                var box = await Hive.openBox("uname");
                 box.deleteFromDisk();
+                Db.email = "";
+                Db.password = "";
+                Db.username = "";
 
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+                Navigator.pushAndRemoveUntil(context,
+                    MaterialPageRoute(builder: (context) {
                   return LoginScreen();
                 }), ModalRoute.withName(''));
-
               },
             )
           ],

@@ -13,7 +13,6 @@ class ListFiles extends StatefulWidget {
 }
 
 class _ListFilesState extends State<ListFiles> {
-
   String dir;
   List file = new List();
 
@@ -45,10 +44,7 @@ class _ListFilesState extends State<ListFiles> {
         alignment: Alignment.center,
         child: Text(
           'You haven\'t created any documents',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.black54
-          ),
+          style: TextStyle(fontSize: 20, color: Colors.black54),
         ),
       );
     else
@@ -121,12 +117,18 @@ class _ListFilesState extends State<ListFiles> {
                                 .replaceAll("'", ""));
                             File temp = File(path);
                             await temp.delete();
-
-                            var res=await Db.client.post(Uri.parse("https://matowork.com/user/delete"),
-                                body: json.encode({"filename":Db.filename, "username": Db.username}),
+                            //print();
+                            print(item.split('/')[pos].replaceAll("'", ""));
+                            var res = await Db.client.post(
+                                Uri.parse("https://matowork.com/user/delete"),
+                                body: json.encode({
+                                  "filename":
+                                      '${item.split('/')[pos].replaceAll("'", "")}',
+                                  "username": Db.username
+                                }),
                                 headers: {"Content-Type": "application/json"});
 
-                            Map body=json.decode(res.body);
+                            Map body = json.decode(res.body);
                             print(body);
                             setState(() {
                               file = Directory(dir).listSync();
@@ -139,8 +141,8 @@ class _ListFilesState extends State<ListFiles> {
                 );
             },
             separatorBuilder: (context, index) => SizedBox(
-              height: 8.0,
-            ),
+                  height: 8.0,
+                ),
             itemCount: file.length),
       );
   }

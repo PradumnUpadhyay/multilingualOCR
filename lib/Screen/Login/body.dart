@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:matowork/Screen/Login/input_box.dart';
-import 'package:matowork/Screen/OTP_Screen/otp_screen.dart';
+
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/account_check.dart';
 import 'package:matowork/components/db.dart';
@@ -18,7 +18,8 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   bool _obscureText = true;
   bool _toggleIcon = false;
-
+  bool checker = false;
+  bool checker2 = false;
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
@@ -51,9 +52,7 @@ class _BodyState extends State<Body> {
                   hintText: "Your Email",
                   border: InputBorder.none),
               onChanged: (value) {
-                setState(() {
-                  Db.email = value;
-                });
+                Db.email = value.trim();
               },
             ),
           ),
@@ -78,9 +77,7 @@ class _BodyState extends State<Body> {
                   hintText: "Password",
                   border: InputBorder.none),
               onChanged: (value) {
-                setState(() {
-                  Db.password = value;
-                });
+                Db.password = value.trim();
               },
             ),
           ),
@@ -93,36 +90,60 @@ class _BodyState extends State<Body> {
               child: FlatButton(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
                 color: Color(0xFF6F35A5),
-                onPressed: () async {
-                  var res = await Db.client.post("https://matowork.com/user/login",
-                      body: json.encode({"email": Db.email, "password": Db.password}),
-                      headers: {'Content-Type': "application/json"});
-                  Map body=json.decode(res.body);
+                onPressed: checker2 == true
+                    ? null
+                    : () async {
+                        if (Db.email == "" || Db.password == "") {
+                          setState(() {
+                            checker = true;
+                          });
+                          return;
+                        }
+                        setState(() {
+                          checker2 = true;
+                        });
 
-                  if(body["logged-in"]==true) {
-                    var box=await Hive.openBox('uname');
-                    Db.username=Db.email+Db.password;
-                    box.put("username",Db.username);
-                    print("Login");
-                    print(Db.username);
-                  Db.pageLeft=await Db.getPageLimit();
-                  Navigator.pushAndRemoveUntil(context,
-                      MaterialPageRoute(builder: (context) {
-                    return WelcomeScreen();
-                  }), ModalRoute.withName(''));
-                 } else {
-                        Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) {
-                        return SignUp();
-                        }), ModalRoute.withName(''));
-                  }
-
-                },
+                        var res = await Db.client.post(
+                            "https://matowork.com/user/login",
+                            body: json.encode(
+                                {"email": Db.email, "password": Db.password}),
+                            headers: {'Content-Type': "application/json"});
+                        Map body = json.decode(res.body);
+                        print(res.statusCode);
+                        if (body["logged-in"] == true) {
+                          var box = await Hive.openBox('uname');
+                          Db.username = Db.email + Db.password;
+                          box.put("username", Db.username);
+                          print("Login");
+                          print(Db.username);
+                          Db.pageLeft = await Db.getPageLimit();
+                          Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) {
+                            return WelcomeScreen();
+                          }), ModalRoute.withName(''));
+                        } else {
+                          setState(() {
+                            checker = false;
+                            checker2 = false;
+                          });
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('Invalid Email or Password'),
+                            duration: Duration(seconds: 5),
+                          ));
+                          // setState(() {
+                          //   checker = true;
+                          //   checker2 = false;
+                          // });
+                        }
+                      },
                 child: Text("LOGIN", style: TextStyle(color: Colors.white)),
               ),
             ),
           ),
-
+          checker == true
+              ? Text("Please enter your email and password",
+                  style: TextStyle(color: Colors.red, fontSize: 17))
+              : Text(""),
           SizedBox(
             height: size.height * 0.03,
           ),

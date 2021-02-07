@@ -20,7 +20,6 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
   final int time = 75;
   AnimationController _controller;
 
-
   // Variables
   Size _screenSize;
   int _currentDigit;
@@ -30,7 +29,7 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
   int _fourthDigit;
   int _fifthDigit;
   int _sixthDigit;
-
+  bool disable = false;
   Timer timer;
   int totalTimeInSeconds;
   bool _hideResendButton;
@@ -94,15 +93,21 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
 
   // Returns "OTP" input part
   get _getInputPart {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        _getVerificationCodeLabel,
-        _getEmailLabel,
-        _getInputField,
-        _hideResendButton ? _getTimerText : _getResendButton,
-        _getOtpKeyboard
+    return Flex(
+      direction: Axis.vertical,
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              _getVerificationCodeLabel,
+              _getEmailLabel,
+              _getInputField,
+              _hideResendButton ? _getTimerText : _getResendButton,
+              _getOtpKeyboard
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -138,14 +143,20 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
             borderRadius: BorderRadius.circular(50.0),
           ),
           color: Colors.blueAccent,
-          onPressed: () async {
-            print("Username: "+Db.email+Db.password);
-            http.Response _ = await Db.client
-                .post("matowork.com/user/opt", body: json.encode({"email": Db.email}),
-                headers: {'Content-Type': "application/json"});
-            clearOtp();
-            _startCountdown();
-          },
+          onPressed: disable == true
+              ? null
+              : () async {
+                  setState(() {
+                    disable = true;
+                  });
+                  print("Username: " + Db.email + Db.password);
+                  http.Response _ = await Db.client.post(
+                      "https://matowork.com/user/opt",
+                      body: json.encode({"email": Db.email}),
+                      headers: {'Content-Type': "application/json"});
+                  clearOtp();
+                  _startCountdown();
+                },
           child: Text(
             "Resend OTP",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
@@ -241,26 +252,30 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
                         ),
                         onPressed: () async {
                           print("OTP screen");
-                          print(Db.email+Db.password);
-                          http.Response response = await Db.client
-                              .post("https://matowork.com/user/registration", body: json.encode({
-                            "email": Db.email,
-                            "otp": Db.otp,
-                            "username": "${Db.email+Db.password}"
-                          }),
+                          print(Db.email + Db.password);
+                          http.Response response = await Db.client.post(
+                              "https://matowork.com/user/registration",
+                              body: json.encode({
+                                "email": Db.email,
+                                "otp": Db.otp,
+                                "username": "${Db.email + Db.password}"
+                              }),
                               headers: {'Content-Type': "application/json"});
 
                           var res = json.decode(response.body);
-                            print(response.body);
+                          print(response.body);
                           if (res['registration'] == true) {
-                            var box=await Hive.openBox("uname");
-                            Db.username=Db.email+Db.password;
-                            box.put('username',Db.username);
+                            var box = await Hive.openBox("uname");
+                            Db.username = Db.email + Db.password;
+                            box.put('username', Db.username);
+                            Db.pageLeft = await Db.getPageLimit();
                             Navigator.pushAndRemoveUntil(context,
                                 MaterialPageRoute(builder: (context) {
                               return WelcomeScreen();
                             }), ModalRoute.withName(''));
                           } else {
+                            Db.invalidOtp = true;
+
                             Navigator.pushAndRemoveUntil(context,
                                 MaterialPageRoute(builder: (context) {
                               return SignUp();
