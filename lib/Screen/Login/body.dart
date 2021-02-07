@@ -35,8 +35,8 @@ class _BodyState extends State<Body> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            "Welcome!",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 43),
+            "Welcome",
+            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 40),
           ),
 
           SizedBox(
