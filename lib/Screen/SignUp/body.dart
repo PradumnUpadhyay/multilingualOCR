@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:matowork/Screen/Login/input_box.dart';
 import 'package:matowork/Screen/Login/login.dart';
 import 'package:matowork/Screen/OTP_Screen/otp_screen.dart';
@@ -229,6 +230,25 @@ class _BodyState extends State<Body> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: size.height * 0.01,
+              ),
+
+              SizedBox(
+                height: size.height * 0.02,
+              ),
+              AccountCheck(
+                login: false,
+                press: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return LoginScreen();
+                  }));
+                },
+              ),
+
+              SizedBox(
+                height: size.height * 0.02,
+              ),
               _match == false
                   ? Text(
                       "Passwords do not match",
@@ -267,17 +287,6 @@ class _BodyState extends State<Body> {
                 height: size.height * 0.02,
               ),
 
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-              AccountCheck(
-                login: false,
-                press: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return LoginScreen();
-                  }));
-                },
-              )
             ],
           ),
         ),

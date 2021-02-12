@@ -45,11 +45,11 @@ class _VerticalSplitViewState extends State<VerticalSplitView> {
       }
 
       return SizedBox(
-        width: constraints.maxWidth ,
+        width: MediaQuery.of(context).size.width ,
         child: Row(
           children: <Widget>[
             SizedBox(
-              width: _width1+20,
+              width: MediaQuery.of(context).size.width/2,
               child: widget.left,
 
             ),
@@ -73,8 +73,8 @@ class _VerticalSplitViewState extends State<VerticalSplitView> {
               },
             ),
             SizedBox(
-              width: _width2-20,
-              child: widget.right,
+              width: MediaQuery.of(context).size.width/2.3,
+              child: Container(width: MediaQuery.of(context).size.width/2, child:widget.right, padding: EdgeInsets.all(0),),
             ),
           ],
         ),

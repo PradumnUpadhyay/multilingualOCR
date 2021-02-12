@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 import 'package:matowork/Screen/Login/input_box.dart';
-
+import 'package:matowork/Screen/Forgot_Password/forgot_pass.dart';
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/account_check.dart';
 import 'package:matowork/components/db.dart';
@@ -144,6 +144,26 @@ class _BodyState extends State<Body> {
               ? Text("Please enter your email and password",
                   style: TextStyle(color: Colors.red, fontSize: 17))
               : Text(""),
+          SizedBox(
+            height: size.height * 0.03,
+          ),
+          GestureDetector(
+            onTap: ( ) {
+              setState(() {
+                Db.forgotPass=true;
+              });
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
+                    return ForgotPasswordScreen();
+                  })
+                  , ModalRoute.withName('/'));
+            },
+            child: Text("Forgot Password?", style: TextStyle(
+                color: Color(0xFF6F35A5),
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline
+            )),
+          ),
           SizedBox(
             height: size.height * 0.03,
           ),

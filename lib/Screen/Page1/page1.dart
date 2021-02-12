@@ -315,7 +315,7 @@ class _Page1State extends State<Page1> {
                   ))
             ],
           ),
-          leadingWidth: MediaQuery.of(context).size.width / 2,
+          leadingWidth: MediaQuery.of(context).size.width/2,
           backgroundColor: Color(0xFF6F35A5),
         ),
         body: Column(
@@ -393,6 +393,7 @@ class _Page1State extends State<Page1> {
                   ),
                   body: Container(
                     height: MediaQuery.of(context).size.height - 200,
+                    width: MediaQuery.of(context).size.width/2,
 //                         decoration: BoxDecoration(border: Border(right: BorderSide(color: Colors.black,width: 2.0,style: BorderStyle.solid,))),
                     child: Column(
                       children: [
@@ -448,6 +449,7 @@ class _Page1State extends State<Page1> {
                     ),
                   ),
                   body: Container(
+                    width: MediaQuery.of(context).size.width/2.3,
                     child: Column(
                       children: [
                         Text(

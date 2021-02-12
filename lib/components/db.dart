@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class Db {
   static final snackBar = SnackBar(
@@ -11,6 +12,7 @@ class Db {
     duration: Duration(seconds: 2),
   );
 
+  static bool forgotPass=false;
   static bool invalidOtp = false;
   static List<bool> checker = new List<bool>();
   static bool convert = false;
@@ -173,4 +175,5 @@ class Db {
 
     return c;
   }
+
 }

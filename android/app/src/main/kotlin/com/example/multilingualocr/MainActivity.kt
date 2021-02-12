@@ -1,4 +1,4 @@
-package com.example.multilingualocr
+package com.matowork.multilingualocr
 
 import io.flutter.embedding.android.FlutterActivity
 

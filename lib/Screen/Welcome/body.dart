@@ -32,7 +32,8 @@ class _BodyState extends State<Body> {
             content: TextField(
               onChanged: (value) {
                 setState(() {
-                  valueText = value.trim();
+
+                  valueText = value;
                 });
               },
               controller: _textFieldController,
@@ -57,14 +58,18 @@ class _BodyState extends State<Body> {
                   child: Text('CREATE'),
                   onPressed: () {
                     setState(() {
-                      Db.filename = valueText.trim();
+                      (valueText!=null) ?
+                      Db.filename = valueText.trim(): Db.filename="";
                       print(Db.filename);
                       if (Db.filename.contains('_')) {
                         _scaffoldKey.currentState.showSnackBar(SnackBar(
                           content: Text(
                               "Filename cannot contain an underscore  ( _ ) "),
-                          duration: Duration(seconds: 3),
+//                          duration: Duration(seconds: 2),
                         ));
+                        setState(() {
+                          Db.filename="";
+                        });
                         return;
                       }
                       if (valueText != null &&
@@ -75,7 +80,11 @@ class _BodyState extends State<Body> {
                             .popUntil((route) => route.isFirst);
                         Navigator.pushReplacementNamed(context, '/page1');
                       } else {
-                        _scaffoldKey.currentState.showSnackBar(Db.snackBar);
+
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text('Filename is empty'),
+//                          duration: Duration(seconds: 2),
+                        ));
                       }
                     });
                   },

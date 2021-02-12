@@ -93,23 +93,16 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
 
   // Returns "OTP" input part
   get _getInputPart {
-    return Flex(
-      direction: Axis.vertical,
-      children: [
-        Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _getVerificationCodeLabel,
-              _getEmailLabel,
-              _getInputField,
-              _hideResendButton ? _getTimerText : _getResendButton,
-              _getOtpKeyboard
-            ],
-          ),
-        ),
-      ],
-    );
+    return Column(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      _getVerificationCodeLabel,
+      _getEmailLabel,
+      _getInputField,
+      _hideResendButton ? _getTimerText : _getResendButton,
+      _getOtpKeyboard
+    ],
+      );
   }
 
   // Returns "Timer" label
@@ -252,19 +245,39 @@ class _OtpViewState extends State<OtpView> with SingleTickerProviderStateMixin {
                         ),
                         onPressed: () async {
                           print("OTP screen");
+                          http.Response response;
                           print(Db.email + Db.password);
-                          http.Response response = await Db.client.post(
-                              "https://matowork.com/user/registration",
-                              body: json.encode({
-                                "email": Db.email,
-                                "otp": Db.otp,
-                                "username": "${Db.email + Db.password}"
-                              }),
-                              headers: {'Content-Type': "application/json"});
+                          print(Db.otp);
+                          print(Db.forgotPass);
+                          if(Db.forgotPass == true){
+                            print(Db.password);
+                            response=await Db.client.post("https://matowork.com/user/password",
+                                body: json.encode( {"email": Db.email,
+                                  "otp": Db.otp,
+                                  "username": "${Db.email}${Db.password}"} ),
+                                headers: {'Content-Type': "application/json"}
 
+
+                            );
+                            Db.forgotPass=false;
+                          }
+
+                          else
+                           {
+                             print("Else ${Db.password}");
+                             response = await Db.client.post(
+                                 "https://matowork.com/user/registration",
+                                 body: json.encode({
+                                   "email": Db.email,
+                                   "otp": Db.otp,
+                                   "username": "${Db.email + Db.password}"
+                                 }),
+                                 headers: {'Content-Type': "application/json"});
+
+                           }
                           var res = json.decode(response.body);
                           print(response.body);
-                          if (res['registration'] == true) {
+                          if (res['registration'] == true || res['changed'] == "true") {
                             var box = await Hive.openBox("uname");
                             Db.username = Db.email + Db.password;
                             box.put('username', Db.username);

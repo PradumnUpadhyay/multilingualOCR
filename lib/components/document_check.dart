@@ -78,12 +78,13 @@ class _ListFilesState extends State<ListFiles> {
                           //width: MediaQuery.of(context).size.width - 100,
                           child: FlatButton(
                             onPressed: () async {
-                              print("Card clicked!");
-                              final String path = (item
-                                  .toString()
-                                  .split("File: '")[1]
-                                  .replaceAll("'", ""));
-                              openFile(path);
+
+                                print("Card clicked!");
+                                final String path = (item
+                                    .toString()
+                                    .split("File: '")[1]
+                                    .replaceAll("'", ""));
+                                openFile(path);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),

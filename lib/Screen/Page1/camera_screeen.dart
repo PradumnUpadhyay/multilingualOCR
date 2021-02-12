@@ -27,7 +27,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     super.initState();
     _controller = CameraController(
       widget.camera,
-      ResolutionPreset.medium,
+      ResolutionPreset.ultraHigh,
     );
     _initializeControllerFuture = _controller.initialize();
   }
@@ -45,9 +45,11 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
       appBar: AppBar(title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(''),
+          Text('Images Clicked: $c', style: TextStyle(
+            fontWeight: FontWeight.w300
+          ),),
           FlatButton(
-              onPressed: () {
+              onPressed: () async {
                 Db.displayImages.addAll(files);
               Db.imageList.addAll(files);
                 for(int i=0;i<Db.displayImages.length;i++) {
@@ -75,14 +77,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                 return Center(child: CircularProgressIndicator());
               }
             },
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("Images Clicked: $c", style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.black54,
-              fontSize: 25,
-            ),),
           ),
         ],
       ),
