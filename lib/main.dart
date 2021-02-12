@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:matowork/Screen/Forgot_Password/forgot_pass.dart';
+
 import 'package:matowork/Screen/Page1/page1.dart';
 import 'package:matowork/Screen/SignUp/signup.dart';
 import 'package:hive/hive.dart';
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/db.dart';
+import 'package:matowork/components/intck.dart';
 import 'package:path_provider/path_provider.dart';
 
 List<CameraDescription> cameras;
@@ -23,7 +24,7 @@ void main() async {
   print(Db.username);
   (un != null && un != "") ? userChecker = true : userChecker = false;
   cameras = await availableCameras();
-
+  await Intcker.checkConnection();
 //  print(Db.pageLeft);
 
   runApp(MyApp());
@@ -38,10 +39,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primaryColor: Color(0xFF6F35A5),
           scaffoldBackgroundColor: Colors.white),
-      home:
-//      ForgotPasswordScreen(),
-
-          userChecker == true ? WelcomeScreen() : SignUp(),
+      home: Intcker.connect == true
+          ? userChecker == true
+              ? WelcomeScreen()
+              : SignUp()
+          : SignUp(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => WelcomeScreen(),
         '/page1': (BuildContext context) => Page1()

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:matowork/Screen/OTP_Screen/otp_screen.dart';
 import 'package:matowork/components/account_check.dart';
 import 'package:matowork/components/db.dart';
 import 'package:http/http.dart' as http;
+import 'package:matowork/components/intck.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -33,7 +35,18 @@ class _BodyState extends State<Body> {
     });
   }
 
+  void execute(BuildContext context) {
+    if (Intcker.connect == false)
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Please Check your Internet Connection'),
+        duration: Duration(seconds: 10),
+      ));
+  }
+
   Widget build(BuildContext context) {
+    Timer(Duration(seconds: 6), () {
+      execute(context);
+    });
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Container(
@@ -286,7 +299,6 @@ class _BodyState extends State<Body> {
               SizedBox(
                 height: size.height * 0.02,
               ),
-
             ],
           ),
         ),

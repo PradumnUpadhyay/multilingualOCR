@@ -1,9 +1,10 @@
 import 'dart:convert';
-
+import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:matowork/components/db.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'dart:io';
 
@@ -34,7 +35,14 @@ class _ListFilesState extends State<ListFiles> {
   // Function to open file
   Future<void> openFile(String filename) async {
     print(filename);
-    await OpenFile.open(filename);
+    //List<Application> apps = await DeviceApps.getInstalledApplications();
+    bool checker = await DeviceApps.isAppInstalled(
+        'com.google.android.apps.docs.editors.docs');
+    if (checker == true)
+      await OpenFile.open(filename);
+    else
+      await launch(
+          'https://play.google.com/store/apps/details?id=com.google.android.apps.docs.editors.docs');
   }
 
   @override
@@ -78,13 +86,12 @@ class _ListFilesState extends State<ListFiles> {
                           //width: MediaQuery.of(context).size.width - 100,
                           child: FlatButton(
                             onPressed: () async {
-
-                                print("Card clicked!");
-                                final String path = (item
-                                    .toString()
-                                    .split("File: '")[1]
-                                    .replaceAll("'", ""));
-                                openFile(path);
+                              print("Card clicked!");
+                              final String path = (item
+                                  .toString()
+                                  .split("File: '")[1]
+                                  .replaceAll("'", ""));
+                              openFile(path);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
