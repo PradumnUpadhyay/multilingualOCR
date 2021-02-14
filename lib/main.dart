@@ -4,6 +4,7 @@ import 'package:matowork/Screen/Forgot_Password/forgot_pass.dart';
 import 'package:matowork/Screen/Page1/page1.dart';
 import 'package:matowork/Screen/SignUp/signup.dart';
 import 'package:hive/hive.dart';
+import 'package:matowork/Screen/Upgrade/upgrade.dart';
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/db.dart';
 import 'package:path_provider/path_provider.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white),
       home:
 //      ForgotPasswordScreen(),
-
+//MyHomePage(),
           userChecker == true ? WelcomeScreen() : SignUp(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => WelcomeScreen(),

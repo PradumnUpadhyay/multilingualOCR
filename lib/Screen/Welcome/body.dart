@@ -19,6 +19,12 @@ class _BodyState extends State<Body> {
         Db.pageLeft = value;
       });
     });
+
+    Db.getExpiry().then((value) {
+      setState(() {
+        Db.expiry=value;
+      });
+    });
   }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -106,13 +112,86 @@ class _BodyState extends State<Body> {
 
     return Scaffold(
       key: _scaffoldKey,
+      drawer: ClipRRect(
+        borderRadius: BorderRadius.only(bottomRight: Radius.circular(40)),
+        child: Container(
+          width: MediaQuery.of(context).size.width/1.5,
+          child: Drawer(
+
+            child: ListView(
+//          padding: EdgeInsets.all(8.0),
+              children: <Widget>[
+                SafeArea(
+                  child: UserAccountsDrawerHeader(
+                      accountEmail: Text("${Db.username.split("com")[0]+"com"}"),
+                    currentAccountPicture: CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      child: Text("${Db.username[0].toUpperCase()}", style: TextStyle(
+                      fontSize: 40.0
+                      ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                ListTile(
+                  leading: Icon(Icons.timer),
+                  title: Text("Days Left ${Db.expiry}", style: TextStyle(
+                  fontSize: 19
+                  ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+                  child: Divider(color: Colors.black38,),
+                ),
+                ListTile(
+                  leading: Icon(Icons.cloud_upload),
+                  title: Text("Upgrade", style: TextStyle(
+                    fontSize: 19
+                  ),),
+                  onTap: () {},
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+                  child: Divider(color: Colors.black38,),
+                ),
+                ListTile(
+                  leading: Icon(Icons.arrow_back),
+                     title: Text("LogOut", style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400)
+                  ),
+                  onTap: () async {
+                    var box = await Hive.openBox("uname");
+                    box.deleteFromDisk();
+                    Db.email = "";
+                    Db.password = "";
+                    Db.username = "";
+
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) {
+                          return LoginScreen();
+                        }), ModalRoute.withName(''));
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+                  child: Divider(color: Colors.black38,),
+                ),
+              ],
+            )
+          ),
+        ),
+      ),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.deepPurple,
 //        Colors.deepPurple[100],
 
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Row(
               children: [
@@ -132,27 +211,27 @@ class _BodyState extends State<Body> {
                 ),
               ],
             ),
-            FlatButton(
-              child: Text(
-                "LogOut",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400),
-              ),
-              onPressed: () async {
-                var box = await Hive.openBox("uname");
-                box.deleteFromDisk();
-                Db.email = "";
-                Db.password = "";
-                Db.username = "";
-
-                Navigator.pushAndRemoveUntil(context,
-                    MaterialPageRoute(builder: (context) {
-                  return LoginScreen();
-                }), ModalRoute.withName(''));
-              },
-            )
+//            FlatButton(
+//              child: Text(
+//                "LogOut",
+//                style: TextStyle(
+//                    color: Colors.white,
+//                    fontSize: 20,
+//                    fontWeight: FontWeight.w400),
+//              ),
+//              onPressed: () async {
+//                var box = await Hive.openBox("uname");
+//                box.deleteFromDisk();
+//                Db.email = "";
+//                Db.password = "";
+//                Db.username = "";
+//
+//                Navigator.pushAndRemoveUntil(context,
+//                    MaterialPageRoute(builder: (context) {
+//                  return LoginScreen();
+//                }), ModalRoute.withName(''));
+//              },
+//            )
           ],
         ),
       ),

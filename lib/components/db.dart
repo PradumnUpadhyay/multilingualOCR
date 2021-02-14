@@ -11,7 +11,7 @@ class Db {
     content: Text('Filename is empty'),
     duration: Duration(seconds: 2),
   );
-
+  static int expiry=0;
   static bool forgotPass=false;
   static bool invalidOtp = false;
   static List<bool> checker = new List<bool>();
@@ -174,6 +174,16 @@ class Db {
     }
 
     return c;
+  }
+
+  static Future<int> getExpiry() async {
+    var res = await Db.client.post("https://matowork.com/user/expiry",
+        body: json.encode({"username": Db.username}),
+        headers: {'Content-Type': "application/json"});
+
+    Map body = json.decode(res.body);
+//    print(body);
+    return body['expiry'];
   }
 
 }
