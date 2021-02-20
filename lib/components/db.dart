@@ -11,6 +11,7 @@ class Db {
     content: Text('Filename is empty'),
     duration: Duration(seconds: 2),
   );
+  static String tier="";
   static int expiry=0;
   static bool forgotPass=false;
   static bool invalidOtp = false;

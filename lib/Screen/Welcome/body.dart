@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:matowork/Screen/Login/login.dart';
+import 'package:matowork/Screen/Upgrade/upgrade.dart';
 import 'package:matowork/components/document_check.dart';
 import '../../components/db.dart';
 
 class Body extends StatefulWidget {
+
+
   @override
   _BodyState createState() => _BodyState();
 }
@@ -150,7 +153,12 @@ class _BodyState extends State<Body> {
                   title: Text("Upgrade", style: TextStyle(
                     fontSize: 19
                   ),),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(context,
+                        MaterialPageRoute(builder: (context) {
+                          return UpgradeScreen();
+                        }), ModalRoute.withName(''));
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
@@ -180,6 +188,9 @@ class _BodyState extends State<Body> {
                   padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
                   child: Divider(color: Colors.black38,),
                 ),
+                Db.tier!="" ? ListTile(
+                  title: Text(Db.tier),
+                ) : Text("")
               ],
             )
           ),

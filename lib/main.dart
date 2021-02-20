@@ -24,7 +24,6 @@ void main() async {
   print(Db.username);
   (un != null && un != "") ? userChecker = true : userChecker = false;
   cameras = await availableCameras();
-
 //  print(Db.pageLeft);
 
   runApp(MyApp());
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white),
       home:
 //      ForgotPasswordScreen(),
-//MyHomePage(),
+//UpgradeScreen(),
           userChecker == true ? WelcomeScreen() : SignUp(),
       routes: <String, WidgetBuilder>{
         '/home': (BuildContext context) => WelcomeScreen(),
