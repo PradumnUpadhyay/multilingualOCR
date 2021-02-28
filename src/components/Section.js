@@ -29,8 +29,6 @@ return (
                         } 
                         </h1>
 
-
-
                         <p className={textdescription ? 'home-subtitle' : 'home-subtitle dark'}>
                             {
                                 home===true && !mobileView ?   <span className="col" id="img-subheading">Multilingual OCR</span>   
@@ -94,8 +92,13 @@ return (
                        </div>
                   
                     
-                   </div>: !mobileView && 
-                   img!=='' ? <img src={img} alt={alt} className="home-img qr-code"/> :""}
+                   </div>:  
+                   img!=='' ?<div>
+                       <img src={img} alt={alt} className="home-img qr-code"/>
+                       {
+                       home && !mobileView ? <p id="qr-subheading"> Scan the QR code to download the App</p> : "" 
+                       }
+                       </div>  : ""}
                 </div>
             </div>
             </div>

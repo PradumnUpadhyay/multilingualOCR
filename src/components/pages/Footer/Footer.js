@@ -1,6 +1,5 @@
 import React from 'react';
 import './Footer.css';
-import { Link } from 'react-router-dom';
 import {
   FaFacebook,
   FaInstagram,
@@ -14,21 +13,19 @@ function Footer() {
       <div className='footer-links'>
         
         <div className='footer-link-wrapper'>
-        <div className='footer-link-items policies'>   
-           <Link to='https://raw.githubusercontent.com/Matowork/Multilingualocr/main/PrivacyPolicy'>Privacy Policy</Link>       
-        <Link to='https://raw.githubusercontent.com/Matowork/Multilingualocr/main/TermOfService'>Terms and Services</Link>
-        </div>
-        <div className='footer-link-items'>
+        
+        <div className='footer-link-items contacts'>
             <h2>Contact Us</h2>
-            <Link to='/'>support@matowork.com</Link>
+            support@matowork.com
            
           </div>
        
           
-          <div className='footer-link-items'>
+          <div className='footer-link-items social-media media'>
             <h2>Social Media</h2>
-            <Link to='https://www.facebook.com/matowork.products'>Facebook</Link>
-            <Link to='https://www.instagram.com/matowork.products/'>Instagram</Link>
+            <a rel="noreferrer" href='https://www.facebook.com/matowork.products'>Facebook</a>
+            <a rel="noreferrer" href='https://www.instagram.com/matowork.products/'>Instagram</a>
+            <a rel="noreferrer" href='https://www.linkedin.com/company/matowork'>LinkedIn</a>
            
           </div>
         </div>
@@ -36,39 +33,42 @@ function Footer() {
       <section className='social-media'>
         <div className='social-media-wrap'>
           <div className='footer-logo'>
-            <Link to='/' className='social-logo'>
-             
-              MATOWORK
-            </Link>
+          <a rel="noreferrer" className="footer-link-items policies" href='https://raw.githubusercontent.com/Matowork/Multilingualocr/main/PrivacyPolicy'>Privacy Policy</a> 
+                 
+         <a rel="noreferrer"  className="footer-link-items policies" href='https://raw.githubusercontent.com/Matowork/Multilingualocr/main/TermOfService'>Terms and Services</a>
+                
           </div>
           <small className='website-rights'>MATOWORK &copy; 2021</small>
           <div className='social-icons'>
-            <Link
+            <a
               className='social-icon-link'
-              to='https://www.facebook.com/matowork.products'
+              href='https://www.facebook.com/matowork.products'
               target='_blank'
+              rel="noreferrer"
               aria-label='Facebook'
             >
               <FaFacebook />
-            </Link>
-            <Link
+            </a>
+            <a
               className='social-icon-link'
-              to='https://www.instagram.com/matowork.products/'
+              href='https://www.instagram.com/matowork.products/'
+              rel="noreferrer"
               target='_blank'
               aria-label='Instagram'
             >
               <FaInstagram />
-            </Link>
+            </a>
            
     
-            <Link
+            <a
               className='social-icon-link'
-              to='https://www.linkedin.com/company/matowork'
+              href='https://www.linkedin.com/company/matowork'
+              rel="noreferrer"
               target='_blank'
               aria-label='LinkedIn'
             >
               <FaLinkedin />
-            </Link>
+            </a>
           </div>
         </div>
       </section>
