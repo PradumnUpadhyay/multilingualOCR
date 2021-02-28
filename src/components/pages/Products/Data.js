@@ -63,8 +63,8 @@ export const step3={
     lighttxt: false,
     textdescription:false,
     headline:'Step 2',
-    description:<div className="stpe3">
-        <p className="step3">Multilingual app uses batch mode for supporting multiple languages in a single document.Now, on the document creation page, you can add multiple images using a gallery or camera <br/>
+    description:<div>
+        <p className="step3 home-subtitle">Multilingual app uses batch mode for supporting multiple languages in a single document.Now, on the document creation page, you can add multiple images using a gallery or camera <br/>
         <br/>
         <ul>
         <li>In the gallery mode, you can enter batch or multiple selection mode by longpressing on an image.</li>

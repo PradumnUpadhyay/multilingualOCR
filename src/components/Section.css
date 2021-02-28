@@ -7,6 +7,7 @@
     margin-left: 150px;
     text-align: center;
     font-family: revert;
+
     
 }
 
@@ -219,12 +220,88 @@ img {
       padding-right: 30px;
       padding-left: 30px;
     }
+    body{
+        display: flex;
+        overflow-x: hidden;
+        flex-direction: column;
+        scroll-behavior: smooth;    
+    }
   }  
 
 @media screen and (max-width: 768px) {
     .home-text-wrapper {
         padding-bottom: 15px;
     }
+
+    .home-section{
+        overflow-x: hidden;
+    }
+.btn {
+    position: absolute;
+    
+    flex-direction: column;
+}
+
+.container{
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body{
+    display: flex;
+    overflow-x: hidden;
+    flex-direction: column;
+    scroll-behavior: smooth;    
+    zoom: initial;
+}
+
+.vision-heading{
+    font-size: 40px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: start;
+}
+
+.vision-text{
+    font-size: 25px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.download {
+    left: 10px;
+    top: 20px;
+    justify-content: center;
+    position: relative;
+    display: flex;
+}
+
+#desc-heading, .heading {
+    font-size: 38px;
+    display: flex;
+    margin-left: -40px;
+    justify-content: center;
+    align-items: center;
+   
+}
+
+.home-subtitle {
+    font-size: 25px;
+    display: flex;
+   
+    text-align: center;
+    flex-direction: column;
+    position: relative;
+    right: 5%;
+}
+
+.qr-code{
+    margin-left: 30px;
+}
 
     .col {
         max-width: 100%;

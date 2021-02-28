@@ -191,6 +191,45 @@
     .btn {
       width: 100%;
     }
+
+    .contacts{
+      text-align: center;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      left: -3%;
+    }
+
+    .policies {
+      justify-content: center;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      left: -15%;
+    }
+
+    .social-icons {
+      justify-content: space-around;
+      align-items: center;
+      display: flex;
+      right: 20%;
+      top: 20px;
+    }
+
+    .website-rights {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      left: -20%;
+    }
+
+    .media {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      left: -11%;
+    }
   
     .footer-link-wrapper {
       flex-direction: column;

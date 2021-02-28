@@ -84,11 +84,11 @@ return (
                 <div className="home-img-wrapper qr-code">
                    
                    { mobileView && home? <div className="btn">
-                       <div>
+                       <div className="know-more">
                        <Link to="/products" className=" btn-primary info" >Know more</Link>
                        </div>
-                       <div>
-                       <a href="https://matowork.com/donwload" className="btn-primary">Download App</a> 
+                       <div className="download">
+                       <a href="https://matowork.com/multilingual/donwload" className="btn-primary download">Download App</a> 
                        </div>
                   
                     
