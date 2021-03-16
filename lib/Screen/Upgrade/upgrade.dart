@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:matowork/Screen/Page1/page1.dart';
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/db.dart';
@@ -17,19 +18,19 @@ class _UpgradeScreenState extends State<UpgradeScreen> {
   String orderID="";
   List<Map<String, dynamic>> orders=[
     {
-     "name":"Silver",
+     "name":"Matowork",
     "prodId": "silver",
     "description": "1500 pages for 28 days",
     "amount" : 350
   },
     {
-      "name":"Gold",
+      "name":"Matowork",
       "prodId": "gold",
       "description": "3000 pages for 28 days",
       "amount" : 500
     },
     {
-      "name":"Diamond",
+      "name":"Matowork",
       "prodId": "diamond",
       "description": "28000 pages for 28 days",
       "amount" : 1000
@@ -54,7 +55,8 @@ void dispose() {
 void _handlePaymentSuccess(PaymentSuccessResponse response) async {
   // Do something when payment succeeds
   print("SUCCESSFUL PAYMENT");
-  print(response);
+//  print(json.decode(response));
+  print("${response.signature} ${response.paymentId} ${response.orderId}");
 
   http.Response res=await http.post(
       "https://matowork.com/user/verification",
@@ -90,17 +92,21 @@ void _handlePaymentSuccess(PaymentSuccessResponse response) async {
   // Do something when an external wallet is selected
       }
 
-void openCheckout(String name,int amount, String orderId, String description){
+void openCheckout(String name,int amount, String orderId, String prodId) async{
   //@TODO
   print(amount);
   print("$name $orderId");
-  Db.tier=name;
+  var box=await Hive.openBox("uname");
+  await box.put("tier", prodId);
+  String tier=prodId[0].toUpperCase();
+  Db.tier=tier+prodId.substring(1);
+  print(Db.tier);
   var options = {
     'key': 'rzp_test_S37YIf8khcCyPI',
     'amount': amount, //in the smallest currency sub-unit.
     'name': name,
     'order_id': orderId, // Generate order_id using Orders API
-    'description': description, // change description
+    'description': prodId, // change description
     'timeout': 60, // in seconds
     'prefill': {
       'email': Db.email
@@ -125,7 +131,7 @@ void openCheckout(String name,int amount, String orderId, String description){
           onPressed: () {
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
-                  return Page1();
+                  return WelcomeScreen();
                 }), ModalRoute.withName(''));
           },
         ),
@@ -155,8 +161,8 @@ void openCheckout(String name,int amount, String orderId, String description){
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(orders[index]['name'], style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        Text(orders[index]['prodId'].toString().toUpperCase(), style: TextStyle(
+                          fontWeight: FontWeight.w400,
                           fontSize: 20
                         ),),
                         SizedBox(height: 15,),
@@ -185,7 +191,7 @@ void openCheckout(String name,int amount, String orderId, String description){
                               orderID=body["id"];
                               print("Response body: ");
                               print(body);
-                              openCheckout(orders[index]['name'],orders[index]['amount'],body['id'],orders[index]['description']);
+                              openCheckout(orders[index]['name'],orders[index]['amount'],body['id'],orders[index]['prodId']);
                             },
 
                             child: Text("Buy", style: TextStyle(

@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 
+final int version=1;
+
 class Db {
   static final snackBar = SnackBar(
     content: Text('Filename is empty'),
@@ -101,6 +103,7 @@ class Db {
     Db.imageList = [];
     Db.config = [];
     Db.displayImages = [];
+
     List<int> bytes = [];
 
     final file = await getFile(Db.filename);
@@ -185,6 +188,18 @@ class Db {
     Map body = json.decode(res.body);
 //    print(body);
     return body['expiry'];
+  }
+
+  static Future<int> getVersion() async {
+    var res=await Db.client.get("https://matowork.com/user/version");
+
+    Map body=json.decode(res.body);
+    print(body);
+    if(body['version'].toString() == version.toString())
+      return version;
+
+    return null;
+
   }
 
 }

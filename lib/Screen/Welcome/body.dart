@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:matowork/Screen/Login/login.dart';
+import 'package:matowork/Screen/Upgrade/inapp_purchase.dart';
 import 'package:matowork/Screen/Upgrade/upgrade.dart';
 import 'package:matowork/components/document_check.dart';
 import '../../components/db.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Body extends StatefulWidget {
 
@@ -28,6 +30,55 @@ class _BodyState extends State<Body> {
         Db.expiry=value;
       });
     });
+  }
+
+
+  void initState() {
+    super.initState();
+
+    showMessage();
+  }
+
+  Future<void> showMessage() async {
+    if(await Db.getVersion() == null)
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Container(
+//              color: Colors.deepPurple[200],
+              height: 50,
+              child: Text("Alert!", style: TextStyle(
+//                color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w400
+              ),
+              ),
+            ),
+            content: Text("A new Version of app is available. To continue using this application, please download the latest version."),
+
+            actions: [
+              FlatButton(
+                  onPressed: () async {
+                    if (await canLaunch("https://matowork.com/multilingual/download")) {
+                      await launch(
+                        "https://matowork.com/multilingual/download",
+                        forceSafariVC: false,
+                        forceWebView: false,
+                      );
+                    } else {
+                      throw 'Could not launch';
+                    }
+                  } ,
+                  child: Text("Download")
+              )
+            ],
+          );
+        },
+
+    );
+
   }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -138,9 +189,10 @@ class _BodyState extends State<Body> {
                 ),
 
                 ListTile(
-                  leading: Icon(Icons.timer),
-                  title: Text("Days Left ${Db.expiry}", style: TextStyle(
-                  fontSize: 19
+                  leading: Icon(Icons.timer,),
+                  title: Text("${Db.expiry} days left", style: TextStyle(
+                  fontSize: 19,
+                    fontWeight: FontWeight.w400
                   ),
                   ),
                 ),
@@ -149,27 +201,31 @@ class _BodyState extends State<Body> {
                   child: Divider(color: Colors.black38,),
                 ),
                 ListTile(
-                  leading: Icon(Icons.cloud_upload),
+                  leading: Icon(Icons.cloud_upload, color: Colors.blueAccent,),
                   title: Text("Upgrade", style: TextStyle(
-                    fontSize: 19
-                  ),),
-                  onTap: () {
+                    fontWeight: FontWeight.w400  ,
+                    fontSize: 19,
+                    color: Colors.black
+                  ),
+                  ),
+                  onTap:
+                      () {
                     Navigator.pushAndRemoveUntil(context,
                         MaterialPageRoute(builder: (context) {
-                          return UpgradeScreen();
+                          return InAppPurchases();
                         }), ModalRoute.withName(''));
-                  },
+                  } ,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
                   child: Divider(color: Colors.black38,),
                 ),
                 ListTile(
-                  leading: Icon(Icons.arrow_back),
+                  leading: Icon(Icons.arrow_back, color: Colors.red,),
                      title: Text("LogOut", style: TextStyle(
                         color: Colors.redAccent,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400)
+                        fontSize: 19,
+                        fontWeight: FontWeight.w500)
                   ),
                   onTap: () async {
                     var box = await Hive.openBox("uname");
@@ -188,8 +244,19 @@ class _BodyState extends State<Body> {
                   padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
                   child: Divider(color: Colors.black38,),
                 ),
-                Db.tier!="" ? ListTile(
-                  title: Text(Db.tier),
+                Db.tier!="" && Db.tier!=null ? ListTile(
+                  onTap: (){
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) {
+                        return UpgradeScreen();
+                      }), ModalRoute.withName(''));
+                },
+                  title: Text("Upgraded: ${Db.tier}", style: TextStyle(
+                            fontSize: 22,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black87
+                  ),
+                  ),
                 ) : Text("")
               ],
             )
@@ -246,11 +313,12 @@ class _BodyState extends State<Body> {
           ],
         ),
       ),
+
       backgroundColor: Colors.white,
       body: ListFiles(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed:  (){
           _displayTextInputDialog(context);
         },
         child: Icon(Icons.add),

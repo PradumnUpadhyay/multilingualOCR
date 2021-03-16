@@ -12,7 +12,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Multilingual OCR[docx]"
+        android:label="Multilingual OCR"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/launcher_icon">
         <activity
