@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
@@ -14,17 +15,25 @@ class InAppPurchases extends StatefulWidget {
 class _InAppPurchasesState extends State<InAppPurchases> {
 
   bool available=true;
+
   InAppPurchaseConnection _connection=InAppPurchaseConnection.instance;
   final Set<String> _prodIds={'multilingual_diamond','multilingual_gold','multilingual_silver'};
 
   List<ProductDetails> _products=[];
   List<PurchaseDetails> _purchases=[];
 
+  StreamSubscription _subscription;
 
   @override
   void initState() {
     initStore();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   Future<void> initStore() async {
@@ -35,8 +44,15 @@ class _InAppPurchasesState extends State<InAppPurchases> {
       print("Products found");
       await queryProducts();
       await _getPurchases();
-      _verifyPurchase();
+      await _verifyPurchase();
     }
+
+    _subscription=_connection.purchaseUpdatedStream.listen((data)  => setState(() {
+            print("Purchase updatedd");
+            _purchases.addAll(data);
+            _verifyPurchase().whenComplete(() => print("New purcahses added"));
+    }));
+    return;
   }
 
   Future<void> queryProducts() async {
@@ -46,6 +62,7 @@ class _InAppPurchasesState extends State<InAppPurchases> {
       _products=response.productDetails;
     });
 print('Products $_products');
+return;
   }
 
   Future<void> _getPurchases() async {
@@ -62,6 +79,8 @@ print('Products $_products');
       print("Past Purchases(getpurchases) ${response.pastPurchases}");
       _purchases=response.pastPurchases;
     });
+
+    return;
   }
 
   PurchaseDetails _hasPurchased(String productId) {
@@ -69,17 +88,18 @@ print('Products $_products');
     return _purchases.firstWhere((prod) => prod.productID == productId, orElse: ()=>null);
 }
 
-void _verifyPurchase() async {
-  PurchaseDetails purchaseDetails;
+Future<void> _verifyPurchase() async {
+
+    print("inside verify");
+    PurchaseDetails purchaseDetails;
 
       for(String productDetails in _prodIds) {
         purchaseDetails=_hasPurchased(productDetails);
-      print("Inside for-loop $purchaseDetails");
         if(purchaseDetails!=null) break;
       }
 
     //@TODO: serverside verification and record consumable in database
-    print(purchaseDetails);
+    print("Verify Purchase $purchaseDetails");
 //      _purchases=[];
     if(purchaseDetails!=null && purchaseDetails.status == PurchaseStatus.purchased) {
         await _connection.completePurchase(purchaseDetails);
@@ -87,8 +107,11 @@ void _verifyPurchase() async {
 
         Db.tier=purchaseDetails.productID.split("_")[1];
         print("Tier ${Db.tier}");
+        print("acknowledged and state");
+        print(json.decode(purchaseDetails.verificationData.localVerificationData)["acknowledged"]);
+        print(json.decode(purchaseDetails.verificationData.localVerificationData)["purchaseState"]);
 
-        if(json.decode(purchaseDetails.verificationData.localVerificationData)["acknowledged"] == true) {
+        if(json.decode(purchaseDetails.verificationData.localVerificationData)["purchaseState"] == 0) {
           print("Payment Acknowledged");
           var res = await Db.client.post(
               "https://matowork.com/user/verification",
@@ -104,36 +127,43 @@ void _verifyPurchase() async {
          var box=await Hive.openBox('uname');
           box.put("tier", Db.tier);
           print(json.decode(res.body));
-          if (res.statusCode == 200) _pagesConsumed(purchaseDetails);
-        } else {
-          print("Payment was not Acknowledged");
-        }
+          if (res.statusCode == 200) await _pagesConsumed(purchaseDetails);
+
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
               return WelcomeScreen();
             }), ModalRoute.withName(''));
+        } else {
+          print("Payment was not Acknowledged");
+        }
 
     print("inside verify");
     }
+
+    return;
 }
 
-Future<void> _buyProduct(ProductDetails prod) async{
-    final PurchaseParam purchaseParam=PurchaseParam(productDetails: prod);
-    print(purchaseParam);
+void _buyProduct(ProductDetails prod)async{
+    final PurchaseParam purchaseParam= PurchaseParam(productDetails: prod);
 
-   await _connection.buyConsumable(purchaseParam: purchaseParam, autoConsume: false);
+     _connection.buyConsumable(purchaseParam: purchaseParam, autoConsume: false, );
     print("product details $prod");
-//    await _getPurchases();
-//    _verifyPurchase();
+//    print(purchaseDetails);
+
     print("BuyProduct verify");
+
+    return;
 }
 
-void _pagesConsumed(PurchaseDetails purchaseDetails) async{
+Future<void> _pagesConsumed(PurchaseDetails purchaseDetails) async{
 
     //@TODO: update state of consumable to backend db
       var res=await _connection.consumePurchase(purchaseDetails);
+      await _getPurchases();
       print((res.debugMessage));
       print("inside consumed method");
+
+      return;
 }
 
   @override
@@ -150,7 +180,7 @@ void _pagesConsumed(PurchaseDetails purchaseDetails) async{
             },
           ),
           title: Align(
-              alignment: Alignment.center,
+              alignment: Alignment.centerLeft,
               widthFactor: 3,
               child: Text("Upgrade")
           ),
@@ -170,10 +200,21 @@ void _pagesConsumed(PurchaseDetails purchaseDetails) async{
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(_products[index].title.split('(')[0], style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20
-                    ),),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(_products[index].title.split('(')[0], style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 20
+                          ),),
+                          Text("(${_products[index].price})", style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 20
+                          ),),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 15,),
                     Text(_products[index].description,style: TextStyle(
                         color: Colors.black54,
@@ -187,10 +228,10 @@ void _pagesConsumed(PurchaseDetails purchaseDetails) async{
                         color: Colors.deepPurple[400],
                         padding: EdgeInsets.all(17),
                         onPressed: () async{
-                         await _buyProduct(_products[index]);
-                        print("Buy now button $_purchases");
-//                          _pagesConsumed(_purchases[index]);
-//                          _connection.completePurchase(purchase);
+                            _buyProduct(_products[index]);
+                          Db.buildShowDialog(context);
+                         print("Buy now button $_purchases");
+
                         } ,
                         child: Text('Buy',style: TextStyle(
                           color: Colors.white
