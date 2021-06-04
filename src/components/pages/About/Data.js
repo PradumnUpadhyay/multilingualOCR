@@ -7,7 +7,7 @@ export const homeObjTwo={
     lighttxt: false,
     textdescription:false,
     headline:'About Us',
-    description:`We are a startup Company, that provides OCR solutions via mobile applications. For latest updates and offers , follow us on social media. `,
+    description:`We are a startup, providing cloud based OCR solutions. For latest updates and offers , follow us on social media. `,
     imgStart:'start',
     img:mobileView ? "":mw,
     alt:'Image', 

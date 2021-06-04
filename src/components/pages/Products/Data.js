@@ -3,14 +3,39 @@ import ss5 from '../../../../src/ss5.png'
 import ss2 from '../../../../src/ss2.png'
 import ss3 from '../../../../src/ss3.png'
 import ss4 from '../../../../src/ss4.png'
+import { Link } from 'react-router-dom';
+
+export const api={
+    lightbg:true,
+    lighttxt: false,
+    textdescription:false,
+    headline:'1. API',
+    description:
+    <div id="prod-desc">
+        <p className="home-subtitle dark"> We provide API as product. Functionality provided will be similar to that of our andorid app but in form of an end-point. </p>
+        <h5 className="heading-h5"> Features: </h5>
+        
+    <ul className="api">
+       <li>Model will be customized, according to client dataset.*</li>
+       <li>Dedicated VPS instance.*</li>
+       <li>No request limit.*</li>
+    </ul>   
+    <div className="mini-para">For more information checkout our
+    <Link to='/pricing' className="pricing"> pricing page</Link>
+    </div>
+    <p className="star mini-para">* On selected plans.</p>
+    </div>,
+    imgStart:'',
+    img: '',
+}
 
 export const description={
     lightbg:true,
     lighttxt: false,
     textdescription:false,
-    headline:'Multilingual OCR',
+    headline:'2.    Multilingual OCR',
     description:
-        <p className="home-subtitle dark">Multilingual OCR (Optical Character Recognition), is an app that converts the extracted text from images to docx format, meaning you can open the converted file using Google docs. Currently this app supports 9 different languages:
+        <p className="home-subtitle dark" id="prod-desc">Multilingual OCR (Optical Character Recognition), is an app that converts the extracted text from images to docx format, meaning you can open the converted file using Google docs. Currently this app supports 9 different languages:
 	</p>
    
        ,
@@ -64,9 +89,9 @@ export const step3={
     textdescription:false,
     headline:'Step 2',
     description:<div>
-        <p className="step3 home-subtitle">Multilingual app uses batch mode for supporting multiple languages in a single document.Now, on the document creation page, you can add multiple images using a gallery or camera <br/>
+        <p className=" home-subtitle">Multilingual app uses batch mode for supporting multiple languages in a single document.Now, on the document creation page, you can add multiple images using a gallery or camera <br/>
         <br/>
-        <ul>
+        <ul className="step3">
         <li>In the gallery mode, you can enter batch or multiple selection mode by longpressing on an image.</li>
         <br/>
         <li>In camera mode, you can click multiple images at the same time.</li>

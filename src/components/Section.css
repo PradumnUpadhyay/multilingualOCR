@@ -11,12 +11,56 @@
     
 }
 
+p .star{
+    position: relative;
+    right: 25%;
+}
+
+div .pricing {
+    position: relative;
+    left: 1%;
+}
+.heading-h5{
+    font-size: 25px;
+    font-weight: 300;
+    line-height: 1.9rem;
+    text-align: inherit;
+}
+
+#prod-desc, .languages {
+    position: relative;
+    left: 20%;
+}
+
+.api{
+    align-items: flex-start;
+}
+
+.api-desc {
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    left: 5%;
+}
+
+.api li {
+    line-height: 1.8rem;
+    position: relative;
+    left: 6%;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 400;
+
+}
+
 .banner {
     position: relative;
     top: 20%;
+  
 }
 
 .step3{
+    position: relative;
+    padding-right: 50px;
     line-height: 1.1;
     font-size: 25px;
     font-weight: 300;
@@ -67,7 +111,7 @@ position: relative;
 
 .btn {
     position: relative;
-    right: 7.5%;
+    right: inherit;
     text-align: center;
     display: flex;
     justify-content: space-around;
@@ -88,6 +132,8 @@ position: relative;
 }
 
 .heading {
+    position: relative;
+    right: 6%;
     margin-bottom: 24px;
     font-size: 48px;
     line-height: 1.1;
@@ -122,15 +168,20 @@ position: relative;
     background-color:#1c2237 ;
 }
 
-.languages ul {
-    margin-left: 70px;
-}
 
 li{
+   
+
     line-height: 1.1;
     font-size: 25px;
     font-weight: 300;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.languages li{
+    padding-right: 15em;
+    position: relative;
+    left: 20%;
 }
 
 .step3 li {
@@ -147,6 +198,8 @@ li{
     line-height: 24px;
     margin-left: 20px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    /* changes */
+    padding-right: 10px;
 }
 
 .mini-para {
@@ -164,10 +217,9 @@ li{
 
 .home-img {
     max-width: 85%;
-    height: 80%;
-    width: 70%;
-    margin-top: 0;
-    margin-right: 0;
+   
+    width: 50%;
+   
     margin-left: 120px;
  padding-right: 0;
 
@@ -176,6 +228,7 @@ li{
 img {
     border: 0;
     max-width: 100%;
+    width: 50%;
     vertical-align: middle;
     display: inline-block;
 }
@@ -204,8 +257,8 @@ img {
     color: #1c2237;
     font-size: 30px;
     font-weight: 300;
-    position: relative;
-    left: 60px;
+    position: absolute;
+   
 }
 
 .mobile {
@@ -236,15 +289,18 @@ img {
     .home-section{
         overflow-x: hidden;
     }
+
+    #prod-desc{
+        position: relative;
+        left: 10%;
+    }
+    
 .btn {
-    position: absolute;
+    display: flex;
+    position: relative;
     
     flex-direction: column;
-}
-
-.container{
-    max-width: 100%;
-    overflow-x: hidden;
+    align-items: center;
 }
 
 body{
@@ -283,20 +339,20 @@ body{
 #desc-heading, .heading {
     font-size: 38px;
     display: flex;
-    margin-left: -40px;
+    margin-left: 40px;
     justify-content: center;
     align-items: center;
-   
+    position: relative;
+    right: 5%;
 }
 
 .home-subtitle {
     font-size: 25px;
     display: flex;
-   
+    padding-right: 40px;
     text-align: center;
     flex-direction: column;
-    position: relative;
-    right: 5%;
+  
 }
 
 .qr-code{

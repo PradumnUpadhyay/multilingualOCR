@@ -41,6 +41,11 @@ const mobileMenu=() => onclick(false)
                             Products
                             </Link>
                         </li>
+                        <li className="nav-item">
+                            <Link to='/pricing' className="nav-links" onClick={mobileMenu}>
+                            Pricing
+                            </Link>
+                        </li>
                     </ul>
                 </div>
             </div>
