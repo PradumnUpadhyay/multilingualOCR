@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:matowork/Screen/Login/login.dart';
 import 'package:matowork/Screen/Upgrade/inapp_purchase.dart';
-import 'package:matowork/Screen/Upgrade/upgrade.dart';
 import 'package:matowork/components/document_check.dart';
 import '../../components/db.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Body extends StatefulWidget {
-
-
   @override
   _BodyState createState() => _BodyState();
 }
@@ -27,11 +24,10 @@ class _BodyState extends State<Body> {
 
     Db.getExpiry().then((value) {
       setState(() {
-        Db.expiry=value;
+        Db.expiry = value;
       });
     });
   }
-
 
   void initState() {
     super.initState();
@@ -40,8 +36,8 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> showMessage() async {
-    if(await Db.getVersion() == null)
-    return showDialog(
+    if (await Db.getVersion() == null)
+      return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) {
@@ -49,19 +45,21 @@ class _BodyState extends State<Body> {
             title: Container(
 //              color: Colors.deepPurple[200],
               height: 50,
-              child: Text("Alert!", style: TextStyle(
+              child: Text(
+                "Alert!",
+                style: TextStyle(
 //                color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w400
-              ),
+                    fontSize: 25,
+                    fontWeight: FontWeight.w400),
               ),
             ),
-            content: Text("A new Version of app is available. To continue using this application, please download the latest version."),
-
+            content: Text(
+                "A new Version of app is available. To continue using this application, please download the latest version."),
             actions: [
               FlatButton(
                   onPressed: () async {
-                    if (await canLaunch("https://matowork.com/multilingual/download")) {
+                    if (await canLaunch(
+                        "https://matowork.com/multilingual/download")) {
                       await launch(
                         "https://matowork.com/multilingual/download",
                         forceSafariVC: false,
@@ -70,15 +68,12 @@ class _BodyState extends State<Body> {
                     } else {
                       throw 'Could not launch';
                     }
-                  } ,
-                  child: Text("Download")
-              )
+                  },
+                  child: Text("Download"))
             ],
           );
         },
-
-    );
-
+      );
   }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -92,7 +87,6 @@ class _BodyState extends State<Body> {
             content: TextField(
               onChanged: (value) {
                 setState(() {
-
                   valueText = value;
                 });
               },
@@ -118,8 +112,9 @@ class _BodyState extends State<Body> {
                   child: Text('CREATE'),
                   onPressed: () {
                     setState(() {
-                      (valueText!=null) ?
-                      Db.filename = valueText.trim(): Db.filename="";
+                      (valueText != null)
+                          ? Db.filename = valueText.trim()
+                          : Db.filename = "";
                       print(Db.filename);
                       if (Db.filename.contains('_')) {
                         _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -128,7 +123,7 @@ class _BodyState extends State<Body> {
 //                          duration: Duration(seconds: 2),
                         ));
                         setState(() {
-                          Db.filename="";
+                          Db.filename = "";
                         });
                         return;
                       }
@@ -140,7 +135,6 @@ class _BodyState extends State<Body> {
                             .popUntil((route) => route.isFirst);
                         Navigator.pushReplacementNamed(context, '/page1');
                       } else {
-
                         _scaffoldKey.currentState.showSnackBar(SnackBar(
                           content: Text('Filename is empty'),
 //                          duration: Duration(seconds: 2),
@@ -169,98 +163,114 @@ class _BodyState extends State<Body> {
       drawer: ClipRRect(
         borderRadius: BorderRadius.only(bottomRight: Radius.circular(40)),
         child: Container(
-          width: MediaQuery.of(context).size.width/1.5,
+          width: MediaQuery.of(context).size.width / 1.5,
           child: Drawer(
-
-            child: ListView(
+              child: ListView(
 //          padding: EdgeInsets.all(8.0),
-              children: <Widget>[
-                SafeArea(
-                  child: UserAccountsDrawerHeader(
-                      accountEmail: Text("${Db.username.split("com")[0]+"com"}"),
-                    currentAccountPicture: CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      child: Text("${Db.username[0].toUpperCase()}", style: TextStyle(
-                      fontSize: 40.0
-                      ),
-                      ),
+            children: <Widget>[
+              SafeArea(
+                child: UserAccountsDrawerHeader(
+                  accountEmail: Text("${Db.username.split("com")[0] + "com"}"),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text(
+                      "${Db.username[0].toUpperCase()}",
+                      style: TextStyle(fontSize: 40.0),
                     ),
                   ),
                 ),
-
-                ListTile(
-                  leading: Icon(Icons.timer,),
-                  title: Text("${Db.expiry} days left", style: TextStyle(
-                  fontSize: 19,
-                    fontWeight: FontWeight.w400
-                  ),
-                  ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.timer,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                  child: Divider(color: Colors.black38,),
+                title: Text(
+                  "${Db.expiry} days left",
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w400),
                 ),
-                ListTile(
-                  leading: Icon(Icons.cloud_upload, color: Colors.blueAccent,),
-                  title: Text("Upgrade", style: TextStyle(
-                    fontWeight: FontWeight.w400  ,
-                    fontSize: 19,
-                    color: Colors.black
-                  ),
-                  ),
-                  onTap:
-                      () {
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) {
-                          return InAppPurchases();
-                        }), ModalRoute.withName(''));
-                  } ,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+                child: Divider(
+                  color: Colors.black38,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                  child: Divider(color: Colors.black38,),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.cloud_upload,
+                  color: Colors.blueAccent,
                 ),
-                ListTile(
-                  leading: Icon(Icons.arrow_back, color: Colors.red,),
-                     title: Text("LogOut", style: TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: 19,
-                        fontWeight: FontWeight.w500)
-                  ),
-                  onTap: () async {
-                    var box = await Hive.openBox("uname");
-                    box.deleteFromDisk();
-                    Db.email = "";
-                    Db.password = "";
-                    Db.username = "";
-
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) {
-                          return LoginScreen();
-                        }), ModalRoute.withName(''));
-                  },
+                title: Text(
+                  "Upgrade",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 19,
+                      color: Colors.black),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
-                  child: Divider(color: Colors.black38,),
-                ),
-                Db.tier!="" && Db.tier!=null ? ListTile(
-                  onTap: (){
+                onTap: () {
                   Navigator.pushAndRemoveUntil(context,
                       MaterialPageRoute(builder: (context) {
-                        return UpgradeScreen();
-                      }), ModalRoute.withName(''));
+                    return InAppPurchases();
+                  }), ModalRoute.withName(''));
                 },
-                  title: Text("Upgraded: ${Db.tier}", style: TextStyle(
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+                child: Divider(
+                  color: Colors.black38,
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.arrow_back,
+                  color: Colors.red,
+                ),
+                title: Text("LogOut",
+                    style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 19,
+                        fontWeight: FontWeight.w500)),
+                onTap: () async {
+                  var box = await Hive.openBox("uname");
+                  box.deleteFromDisk();
+                  Db.email = "";
+                  Db.password = "";
+                  Db.username = "";
+
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) {
+                    return LoginScreen();
+                  }), ModalRoute.withName(''));
+                },
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+                child: Divider(
+                  color: Colors.black38,
+                ),
+              ),
+              Db.tier != "" && Db.tier != null
+                  ? ListTile(
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (context) {
+                          return InAppPurchases();
+                        }), ModalRoute.withName(''));
+                      },
+                      title: Text(
+                        "Upgraded: ${Db.tier}",
+                        style: TextStyle(
                             fontSize: 22,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black87
-                  ),
-                  ),
-                ) : Text("")
-              ],
-            )
-          ),
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black87),
+                      ),
+                    )
+                  : Text("")
+            ],
+          )),
         ),
       ),
       appBar: AppBar(
@@ -313,12 +323,11 @@ class _BodyState extends State<Body> {
           ],
         ),
       ),
-
       backgroundColor: Colors.white,
       body: ListFiles(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed:  (){
+        onPressed: () {
           _displayTextInputDialog(context);
         },
         child: Icon(Icons.add),

@@ -31,150 +31,152 @@ class _BodyState extends State<Body> {
     Size size = MediaQuery.of(context).size;
     return Container(
       color: Color(0xFFF1E6FF),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            "Welcome",
-            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 40),
-          ),
-
-          SizedBox(
-            height: size.height * 0.03,
-          ),
-          InputBox(
-            child: TextField(
-              decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.person,
-                    color: Color(0xFF6F35A5),
-                  ),
-                  hintText: "Your Email",
-                  border: InputBorder.none),
-              onChanged: (value) {
-                Db.email = value.trim();
-              },
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Welcome",
+              style: TextStyle(fontWeight: FontWeight.w300, fontSize: 40),
             ),
-          ),
 
-          SizedBox(
-            height: size.height * 0.02,
-          ),
-          InputBox(
-            child: TextField(
-              obscureText: _obscureText,
-              decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.lock,
-                    color: Color(0xFF6F35A5),
-                  ),
-                  suffixIcon: IconButton(
-                    icon: _toggleIcon
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
-                    onPressed: _toggle,
-                  ),
-                  hintText: "Password",
-                  border: InputBorder.none),
-              onChanged: (value) {
-                Db.password = value.trim();
-              },
+            SizedBox(
+              height: size.height * 0.03,
             ),
-          ),
-//
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            width: size.width * 0.45,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(29),
-              child: FlatButton(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                color: Color(0xFF6F35A5),
-                onPressed: checker2 == true
-                    ? null
-                    : () async {
-                        if (Db.email == "" || Db.password == "") {
-                          setState(() {
-                            checker = true;
-                          });
-                          return;
-                        }
-                        setState(() {
-                          checker2 = true;
-                        });
-
-                        var res = await Db.client.post(
-                            "https://matowork.com/user/login",
-                            body: json.encode(
-                                {"email": Db.email, "password": Db.password}),
-                            headers: {'Content-Type': "application/json"});
-                        Map body = json.decode(res.body);
-                        print(res.statusCode);
-                        if (body["logged-in"] == true) {
-                          var box = await Hive.openBox('uname');
-                          Db.username = Db.email + Db.password;
-                          box.put("username", Db.username);
-                          print("Login");
-                          print(Db.username);
-                          Db.pageLeft = await Db.getPageLimit();
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) {
-                            return WelcomeScreen();
-                          }), ModalRoute.withName(''));
-                        } else {
-                          setState(() {
-                            checker = false;
-                            checker2 = false;
-                          });
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                            content: Text('Invalid Email or Password'),
-                            duration: Duration(seconds: 5),
-                          ));
-                          // setState(() {
-                          //   checker = true;
-                          //   checker2 = false;
-                          // });
-                        }
-                      },
-                child: Text("LOGIN", style: TextStyle(color: Colors.white)),
+            InputBox(
+              child: TextField(
+                decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.person,
+                      color: Color(0xFF6F35A5),
+                    ),
+                    hintText: "Your Email",
+                    border: InputBorder.none),
+                onChanged: (value) {
+                  Db.email = value.trim();
+                },
               ),
             ),
-          ),
-          checker == true
-              ? Text("Please enter your email and password",
-                  style: TextStyle(color: Colors.red, fontSize: 17))
-              : Text(""),
-          SizedBox(
-            height: size.height * 0.03,
-          ),
-          GestureDetector(
-            onTap: ( ) {
-              setState(() {
-                Db.forgotPass=true;
-              });
-              Navigator.pushAndRemoveUntil(context,
-                  MaterialPageRoute(builder: (context) {
-                    return ForgotPasswordScreen();
-                  })
-                  , ModalRoute.withName('/'));
-            },
-            child: Text("Forgot Password?", style: TextStyle(
-                color: Color(0xFF6F35A5),
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline
-            )),
-          ),
-          SizedBox(
-            height: size.height * 0.03,
-          ),
-          AccountCheck(
-            press: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return SignUp();
-              }));
-            },
-          )
-        ],
+
+            SizedBox(
+              height: size.height * 0.02,
+            ),
+            InputBox(
+              child: TextField(
+                obscureText: _obscureText,
+                decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.lock,
+                      color: Color(0xFF6F35A5),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: _toggleIcon
+                          ? Icon(Icons.visibility)
+                          : Icon(Icons.visibility_off),
+                      onPressed: _toggle,
+                    ),
+                    hintText: "Password",
+                    border: InputBorder.none),
+                onChanged: (value) {
+                  Db.password = value.trim();
+                },
+              ),
+            ),
+//
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              width: size.width * 0.45,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(29),
+                child: FlatButton(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                  color: Color(0xFF6F35A5),
+                  onPressed: checker2 == true
+                      ? null
+                      : () async {
+                          if (Db.email == "" || Db.password == "") {
+                            setState(() {
+                              checker = true;
+                            });
+                            return;
+                          }
+                          setState(() {
+                            checker2 = true;
+                          });
+
+                          var res = await Db.client.post(
+                              "https://matowork.com/user/login",
+                              body: json.encode(
+                                  {"email": Db.email, "password": Db.password}),
+                              headers: {'Content-Type': "application/json"});
+                          Map body = json.decode(res.body);
+                          print(res.statusCode);
+                          if (body["logged-in"] == true) {
+                            var box = await Hive.openBox('uname');
+                            Db.username = Db.email + Db.password;
+                            box.put("username", Db.username);
+                            print("Login");
+                            print(Db.username);
+                            Db.pageLeft = await Db.getPageLimit();
+                            Navigator.pushAndRemoveUntil(context,
+                                MaterialPageRoute(builder: (context) {
+                              return WelcomeScreen();
+                            }), ModalRoute.withName(''));
+                          } else {
+                            setState(() {
+                              checker = false;
+                              checker2 = false;
+                            });
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text('Invalid Email or Password'),
+                              duration: Duration(seconds: 5),
+                            ));
+                            // setState(() {
+                            //   checker = true;
+                            //   checker2 = false;
+                            // });
+                          }
+                        },
+                  child: Text("LOGIN", style: TextStyle(color: Colors.white)),
+                ),
+              ),
+            ),
+            checker == true
+                ? Text("Please enter your email and password",
+                    style: TextStyle(color: Colors.red, fontSize: 17))
+                : Text(""),
+            SizedBox(
+              height: size.height * 0.03,
+            ),
+            GestureDetector(
+              onTap: ( ) {
+                setState(() {
+                  Db.forgotPass=true;
+                });
+                Navigator.pushAndRemoveUntil(context,
+                    MaterialPageRoute(builder: (context) {
+                      return ForgotPasswordScreen();
+                    })
+                    , ModalRoute.withName('/'));
+              },
+              child: Text("Forgot Password?", style: TextStyle(
+                  color: Color(0xFF6F35A5),
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline
+              )),
+            ),
+            SizedBox(
+              height: size.height * 0.03,
+            ),
+            AccountCheck(
+              press: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return SignUp();
+                }));
+              },
+            )
+          ],
+        ),
       ),
     );
   }
