@@ -4,18 +4,17 @@ import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 
-final int version=1;
+final int version = 1;
 
 class Db {
   static final snackBar = SnackBar(
     content: Text('Filename is empty'),
     duration: Duration(seconds: 2),
   );
-  static String tier="";
-  static int expiry=0;
-  static bool forgotPass=false;
+  static String tier = "";
+  static int expiry = 0;
+  static bool forgotPass = false;
   static bool invalidOtp = false;
   static List<bool> checker = new List<bool>();
   static bool convert = false;
@@ -191,15 +190,12 @@ class Db {
   }
 
   static Future<int> getVersion() async {
-    var res=await Db.client.get("https://matowork.com/user/version");
+    var res = await Db.client.get("https://matowork.com/user/version");
 
-    Map body=json.decode(res.body);
+    Map body = json.decode(res.body);
     print(body);
-    if(body['version'].toString() == version.toString())
-      return version;
+    if (body['version'].toString() == version.toString()) return version;
 
     return null;
-
   }
-
 }

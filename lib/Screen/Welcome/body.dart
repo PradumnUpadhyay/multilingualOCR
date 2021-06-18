@@ -170,12 +170,18 @@ class _BodyState extends State<Body> {
             children: <Widget>[
               SafeArea(
                 child: UserAccountsDrawerHeader(
-                  accountEmail: Text("${Db.username.split("com")[0] + "com"}"),
+                  accountEmail: Text(""),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.blue,
                     child: Text(
                       "${Db.username[0].toUpperCase()}",
                       style: TextStyle(fontSize: 40.0),
+                    ),
+                  ),
+                  accountName: Text(
+                    Db.username.split("@")[0].toString().toLowerCase(),
+                    style: TextStyle(
+                      fontSize: 15,
                     ),
                   ),
                 ),

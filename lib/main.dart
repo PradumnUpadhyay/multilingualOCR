@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:matowork/Screen/Forgot_Password/forgot_pass.dart';
+
 import 'package:matowork/Screen/Page1/page1.dart';
 import 'package:matowork/Screen/SignUp/signup.dart';
 import 'package:hive/hive.dart';
-import 'package:matowork/Screen/Upgrade/inapp_purchase.dart';
+
 import 'package:matowork/Screen/Welcome/WelcomeScreen.dart';
 import 'package:matowork/components/db.dart';
 import 'package:path_provider/path_provider.dart';

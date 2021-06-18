@@ -26,7 +26,7 @@ class _VerticalSplitViewState extends State<VerticalSplitView> {
 
   get _width1 => _ratio * _maxWidth;
 
-  get _width2 => (1-_ratio)*_maxWidth;
+  get _width2 => (1 - _ratio) * _maxWidth;
 
   @override
   void initState() {
@@ -45,13 +45,12 @@ class _VerticalSplitViewState extends State<VerticalSplitView> {
       }
 
       return SizedBox(
-        width: MediaQuery.of(context).size.width ,
+        width: MediaQuery.of(context).size.width,
         child: Row(
           children: <Widget>[
             SizedBox(
-              width: MediaQuery.of(context).size.width/2,
+              width: MediaQuery.of(context).size.width / 2,
               child: widget.left,
-
             ),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -73,8 +72,12 @@ class _VerticalSplitViewState extends State<VerticalSplitView> {
               },
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width/2.3,
-              child: Container(width: MediaQuery.of(context).size.width/2, child:widget.right, padding: EdgeInsets.all(0),),
+              width: MediaQuery.of(context).size.width / 2.3,
+              child: Container(
+                width: MediaQuery.of(context).size.width / 2,
+                child: widget.right,
+                padding: EdgeInsets.all(0),
+              ),
             ),
           ],
         ),
