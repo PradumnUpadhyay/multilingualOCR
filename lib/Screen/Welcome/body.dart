@@ -59,9 +59,9 @@ class _BodyState extends State<Body> {
               FlatButton(
                   onPressed: () async {
                     if (await canLaunch(
-                        "https://matowork.com/multilingual/download")) {
+                        "https://play.google.com/store/apps/details?id=com.matowork.multilingualocr")) {
                       await launch(
-                        "https://matowork.com/multilingual/download",
+                        "https://play.google.com/store/apps/details?id=com.matowork.multilingualocr",
                         forceSafariVC: false,
                         forceWebView: false,
                       );
